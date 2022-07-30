@@ -1,0 +1,316 @@
+---
+documentclass: article
+header-includes:
+- \usepackage[utf8]{inputenc}
+- \usepackage{graphicx}
+- \usepackage{booktabs}
+#- \usepackage[table,xcdraw]{xcolor}
+- \usepackage[normalem]{ulem}
+- \usepackage[Lenny]{fncychap}
+#- \usepackage[spanish]{babel}
+- \usepackage[labelfont=bf]{caption}
+- \usepackage{longtable}
+- \usepackage{float}
+- \usepackage{fancyhdr}
+- \usepackage{fancyheadings}
+- \pagestyle{fancy}
+- \rhead{\includegraphics[width=2cm, height=2cm]{logo1}}
+- \lhead{}
+- \chead{\textbf{UNIVERSIDAD DE EL SALVADOR \\ FACULTAD MULTIDISCIPLINARIA DE OCCIDENTE \\ DEPARTAMENTO DE MATEMÁTICA}}
+- \lfoot{\textit{CICLO II 2022}}
+- \rfoot{\textbf{PRÁCTICA 1 (R)}}
+- \setlength{\headheight}{60.50525pt}
+title: "Practica_1_R"
+author: "Cristian Zaldaña"
+date: "2022-07-28"
+geometry: "left=3cm, right=3cm, top=2.5cm, bottom=3.5cm"
+output: pdf_document
+lang: es-ES
+toc: TRUE
+---
+\newpage
+
+
+# CONSOLA DE R (R-CONSOLE) 
+Ejemplo 1. Encontrar el resultado de operar: 2 más 10 por 3 entre 5
+Escriba en la Consola de R: 2+10*3/5 y oprima la tecla ENTER
+
+```{r}
+2+10*3/5
+```
+
+Note que en R se respecta el mismo orden de preferencia de la mayoría de los lenguajes de
+programación, la multiplicación y la división tienen prioridad a la suma y resta
+
+Ejemplo 2. Encontrar el resultado de operar: 3 elevado a la potencia 100
+ 3^100 o también format(3^100, sci = FALSE) 
+ 
+```{r}
+format(3^100, sci = FALSE)
+```
+
+Sci=FALSE le indica a R que muestre todos los dígitos del resultado, de lo contrario (Sci=TRUE)
+solamente se mostrará la representación científica. 
+
+Ejemplo 3. Encontrar el resultado anterior con 15 cifras decimales y guardarlo en la variable y
+y <- format(3^100, digits = 15);y o y = format(3^100, digits = 15) 
+
+```{r}
+y=format(3^100, digits = 15)
+y
+```
+Note que en R, la asignación de valores a una variable puede hacerse con “= “ o con “<-“. 
+
+Ejemplo 4. Redondear el valor de $\pi$ a 4 digitos decimales
+round(pi, 4)
+Aplique las funciones: trunc(pi), floor(pi) y ceiling(pi) 
+
+```{r}
+round(pi, 4)
+trunc(pi)
+floor(pi)
+ceiling(pi)
+```
+
+Ejemplo 5. Guardar en la variable n el valor 150 y luego calcular el valor de n
+ n = 150
+ factorial(n)
+ 
+```{r}
+n=150
+factorial(n)
+```
+
+Ejemplo 6. Operar el complejo (2+3i) elevado a la potencia 10
+ (2+3i)^10 o también format((2+3i)^10, sci = TRUE)
+ 
+```{r}
+(2+3i)^10
+```
+
+Ejemplo 7. Calcular la integral entre 0 y $\pi$ de la función Seno(x)
+f <- function(x) {sin(x)}
+integrate(f, lower = 0, upper = pi)
+
+```{r}
+f=function(x) {sin(x)}
+integrate(f,lower = 0,upper = pi)
+```
+\newpage
+
+# TRABAJANDO CON SCRIPT 
+A medida que estemos realizando un trabajo de pequeña, mediana o de gran complejidad, será muy
+útil manejar todas las entradas que solicitemos a R en un entorno donde podamos corregirlas,
+retocarlas, repetirlas, guardarlas para continuar el trabajo en otro momento, con otros datos, etc. Esta
+es la función del editor de R, a los archivos creados en este editor se les conoce como Script. Es posible
+incluir comentarios que R no leerá si utilizamos líneas que comiencen con el carácter # (o en cualquier
+parte de la línea). Por el contrario, si escribimos cualquier orden no antecedida de # R (sin importar en
+que parte se encuentre) lo reconocerá como instrucciones que deben ejecutarse.
+
+Este archivo se enviara por a parte...
+\newpage
+
+# VECTORES DE DATOS
+
+Este tipo de objetos se denominan estructuras atómicas ya que todos sus elementos son del mismo
+tipo o modo: character (carácter) o numeric (numérico) que puede ser integer (entero), double (real),
+complex (complejo), logical (lógico).
+
+## VECTORES NUMÉRICOS
+
+\textbf{FORMA 1-Crear un vector numérico vacío y añadirle luego sus elementos.}
+\begin {itemize}
+\item Ejemplo 1: v <- numeric(3);v
+\end {itemize}
+```{r}
+v <- numeric(3)
+v
+```
+
+El vector tiene longitud 3 y sus componentes serán NA (Not Available/"Missing" Values)
+que es la forma como R maneja los datos omitidos o faltantes.
+\begin {itemize}
+\item Ejemplo 2: v[3] <- 17; v
+\end {itemize}
+```{r}
+v[3] <- 17
+v
+```
+asigna el valor de 17 en la tercera posición del vector v.
+
+\textbf {FORMA 2-Crear un vector numérico asignándole todos sus elementos o valores.}
+\begin {itemize}
+\item Ejemplo 1: x <- c(2, 4, 3.1, 8, 6) , revise el modo con is.integer(x) y is.double(x); encuentre la
+longitud con: length(x)
+\end {itemize}
+```{r}
+x<- c(2,4,3.1,8,6)
+is.integer(x)
+is.double(x)
+length(x)
+```
+\begin {itemize}
+\item Ejemplo 2: Modifique el vector agregándole el valor 9 en la posición 3, use la siguiente la
+función de edición: x <- edit(x)
+\end {itemize}
+```{r}
+edit(x)
+```
+\textbf{FORMA 3-Crear un vector numérico dando un rango de valores.}
+\begin {itemize}
+\item Ejemplo 1: y = 1:4; y
+\end {itemize}
+```{r}
+y = 1:4
+y
+```
+
+Crea un vector de valores enteros en que su primer elemento es 1 su último es 4
+\begin {itemize}
+\item Ejemplo 2: Modificación de los elementos de un vector: y[2] <- 5 (para modificar un elemento
+de un vector se escribe su nombre (del vector) y entre corchetes el índice del elemento que se
+quiera modificar).
+\end {itemize}
+```{r}
+y[2] <- 5
+y
+```
+\begin {itemize}
+\item Ejemplo 3: Crear un vector con elementos de otro; u <- 1:12; u1=u[2 * 1:5] (vector de tamaño 5
+con elementos de las posiciones pares de u)
+\end {itemize}
+```{r}
+u <- 1:12
+u1=u[2*1:5]
+u1
+```
+
+\textbf {FORMA 4-Crear un vector numérico utilizando la función assign().}
+\begin {itemize}
+\item Ejemplo 1: assign("z", c(x, 0, x)); z (crea un vector en dos copias de x con un cero entre ambas)
+\end {itemize}
+```{r}
+assign("z", c(x,0,x))
+z
+```
+\textbf {FORMA 5-Crear un vector numérico generando una sucesión de valores.}
+\begin {itemize}
+\item Ejemplo 1: s1 <- seq(2, 10); s1 (compárese a como fue generado el vector y y u)
+\end {itemize}
+```{r}
+s1 <- seq(2,10)
+s1
+```
+\begin {itemize}
+\item Ejemplo 2: s2 = seq(from=-1, to=5); s2
+\end {itemize}
+```{r}
+s2 = seq(from=-1, to=5)
+s2
+```
+
+Crea un vector cuyo elemento inicial es -1 y su elemento final es 5, y cada dos elementos
+consecutivos del vector tienen una diferencia de una unidad.
+\begin {itemize}
+\item Ejemplo 3: s3<-seq(to=2, from=-2); s3
+\end {itemize}
+```{r}
+s3<-seq(to=2, from=-2)
+s3
+```
+Note que puede invertir el orden de “to” y de “from”.
+
+\begin {itemize}
+\item Ejemplo 4: Secuencia con incremento o decremento: s4=seq(from=-3, to=3, by=0.2); s4
+\end {itemize}
+```{r}
+s4 = seq(from=-3, to=3, by=0.2)
+s4
+```
+Crea una secuencia que inicia en -3 y termina en 3 con incrementos de 0.2 en 0.2.
+
+\begin {itemize}
+\item Ejemplo 5. Repetición de una secuencia s5 <- rep(s3, times=3); s5
+\end {itemize}
+
+```{r}
+s5 <- rep(s3, time=3)
+s5
+```
+### OPERACIONES CON VECTORES NUMÉRICOS
+
+\begin {itemize}
+\item Ejemplo 1: 1/x (observe que calcula el inverso de cada elemento del vector)
+\end {itemize}
+
+```{r}
+1/x
+```
+\begin {itemize}
+\item Ejemplo 2: v=2*x+z+1; v (genera un nuevo vector, v, de longitud 11, construido sumando,
+elemento a elemento, el vector 2*x repetido 2.2 veces, el vector y, y el número 1 repetido 11
+veces \textbf {“Reciclado en R es repetir las veces necesarias un vector cuando en una operación
+intervienen vectores de distinta longitud”}).
+\end {itemize}
+
+```{r}
+v=2*x+z+1
+v
+```
+\begin {itemize}
+\item Ejemplo 3: e1 <- c(1, 2, 3, 4); e2<-c(4, 5, 6, 7); crossprod(e1, e2) ó t(e1)%*%e2 (calcula el producto interno entre dos vectores. Ambos deben tener el mismo número de elementos.
+\end {itemize}
+
+```{r}
+e1<-c(1,2,3,4)
+e2<-c(4,5,6,7)
+crossprod(e1,e2)
+t(e1)%*%e2
+```
+### OPERACIONES DE FUNCIONES SOBRE VECTORES NUMÉRICOS.
+
+\begin {itemize}
+\item Ejemplo 1: Vector transpuesto del vector x: xt = t(x); xt.
+\end {itemize}
+
+```{r}
+xt=t(x)
+xt
+```
+\begin {itemize}
+\item Ejemplo 2: u = exp(y);u (crea un nuevo vector de la misma longitud que y, en el cual cada
+elemento es la exponencial elevando a su respectivo elemento en y).
+\end {itemize}
+
+```{r}
+u=exp(y)
+u
+```
+\begin {itemize}
+\item options(digits=10); u Permite visualizar un mínimo de 10 dígitos
+\end {itemize}
+
+```{r}
+options(digits = 10)
+u
+```
+
+\textbf{OTRAS OPERACIONES:}
+\begin {itemize}
+\item Ejemplo 1: resum <- c(length(y), sum(y), prod(y), min(y), max(y)); resum
+\end {itemize}
+
+```{r}
+resum<-c(length(y), sum(y), prod(y), min(y), max(y))
+resum
+```
+
+\begin {itemize}
+\item Ejemplo 2: Ordenamiento de un vector: yo <- sort(y); yo
+\end {itemize}
+
+```{r}
+yo <- sort(y)
+yo
+```
+

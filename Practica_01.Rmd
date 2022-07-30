@@ -3,6 +3,7 @@ documentclass: article
 header-includes:
 - \usepackage[utf8]{inputenc}
 - \usepackage{graphicx}
+- \usepackage{enumerate}
 - \usepackage{booktabs}
 #- \usepackage[table,xcdraw]{xcolor}
 - \usepackage[normalem]{ulem}
@@ -312,5 +313,142 @@ resum
 ```{r}
 yo <- sort(y)
 yo
+```
+## VECTORES DE CARACTERES
+
+\textbf {FORMA 1-Crear un vector de caracteres vacío y añadirle luego sus elementos.}
+\begin {itemize}
+\item Ejemplo 1: S<-character()
+\end {itemize}
+
+```{r}
+s<-character()
+```
+
+\textbf {FORMA 2-Crear un vector de caracteres asignándole todos sus elementos.}
+\begin{itemize} 
+\item Ejemplo 1: Crear el vector de caracteres: deptos <- c("Santa Ana", "Sonsonate", "San Salvador"); deptos
+\end {itemize}
+
+```{r}
+deptos <- c("Santa Ana", "Sonsonate", "San Salvador")
+deptos
+```
+\begin {itemize}
+\item Ejemplo 2: Agregue el elemento "Ahuachapán" en la cuarta posición. deptos[4]="Ahuachapán"; deptos (R Permite incrementar el tamaño del vector en cualquier instante).
+\end {itemize}
+
+```{r}
+deptos[4]="Ahuachapán"
+deptos
+```
+\textbf {FORMA 3-Crear un vector de caracteres dándole nombres a los elementos para identificarlos más fácilmente.}
+\begin {itemize}
+\item Ejemplo 1: codDeptos <- c(11, 12, 13, 14) names(codDeptos) <- c("Usulután", "San Miguel", "Morazán", "La Unión");codDeptos Oriente <- codDeptos [c("La Unión", "San Miguel")];Oriente
+\end {itemize}
+
+```{r}
+codDeptos <- c(11,12,13,14) 
+names(codDeptos) <- c("Usulután","San Miguel", "Morazán", "La Unión")
+codDeptos
+Oriente <- codDeptos [c("La Unión", "San Miguel")]
+Oriente
+```
+\begin {itemize}
+\item Ejemplo 2: Crear un vector con las etiquetas X1, Y2, ... , X9, Y10. etiqs<-paste(c("X", "Y"), 1:10, sep=""); etiqs
+\end {itemize}
+
+```{r}
+etiqs <- paste(c("X","Y"), 1:10, sep = "")
+etiqs
+```
+Crea un vector de caracteres resultado de la unión de “X” o de “Y” con uno de los número comprendidos entre 1 y 10, sep=”” indica que no se deja espaciado en la unión.
+
+\newpage
+
+# CREACIÓN Y MANEJO DE MATRICES.
+
+## CREACIÓN DE MATRICES NUMÉRICAS.
+
+\textbf {FORMA 1-Crear una matriz numérica vacía y añadirle luego sus elementos.}
+
+\begin {itemize} 
+\item Ejemplo 1: M <- matrix(numeric(), nrow = 3, ncol=4)
+\end {itemize}
+
+```{r}
+M <- matrix(numeric(), nrow = 3, ncol = 4)
+```
+
+\begin {itemize}
+\item Ejemplo 2: Asignación de los elementos de una matriz: M[2,3] <- 6; M. similar a la de un vector pero considerando que deben utilizarse dos índices para indicar fila y columna.
+\end {itemize}
+
+```{r}
+M[2,3] <- 6
+M
+```
+\textbf {FORMA 2-Crear una matriz numérica asignándole todos sus elementos o valores.}
+
+\begin {itemize}
+\item Ejemplo 1: A <- matrix(c(2, 4, 6, 8, 10, 12), nrow=2, ncol=3); A Observe que R almacena los elementos por columna. Se pueden explorar algunas características de la matriz A, por ejemplo: mode(A); dim(A); attributes(A); is.matrix(A); is.array(A)
+\end {itemize}
+
+```{r}
+A<-matrix(c(2,4,6,8,10,12), nrow = 2, ncol = 3)
+A
+mode(A)
+dim(A)
+attributes(A)
+is.matrix(A)
+is.array(A)
+```
+
+\textbf {FORMA 3-Crear una matriz numérica dando un rango de valores}
+
+\begin {itemize}
+\item Ejemplo 1: B <- matrix(1:12, nrow=3, ncol=4); B
+\end{itemize}
+```{r}
+B<-matrix(1:12, nrow = 3, ncol = 4)
+B
+```
+
+\textbf{FORMA 4-Crear una matriz a partir de la unión de vectores}
+\begin{enumerate}[I.]
+\item Crear tres vectores
+\begin{description}
+\item[] x1 <- seq(0, 10, 2); x1
+\item[] x2 <- seq(1, 11, 2); x2
+\item[] x3 <- runif(6); x3 Vector con valores de una uniforme(0,1)
+\end{description}
+\item Unir los tres vectores en una matriz por columnas.
+\begin{description}
+\item[] Xcol <- cbind(x1, x2, x3); Xcol
+\end{description}
+\item Unir los tres vectores en una matriz por filas.
+\begin{description}
+\item[] Xfil <- rbind(x1, x2, x3); Xfil
+\end{description}
+\item Acceso a las filas y columnas de una matriz.
+\begin{description}
+\item[] X <- Xfil[1:3, c(2, 3)]; X (crea una submatriz de dimensión 3x2 (el 3 se indica por 1:3), las
+columnas están conformadas por la segunda y tercera columna de la matriz Xfill (se indica por C(2,3))
+\end{description}
+\end{enumerate}
+
+```{r}
+x1<-seq(0,10,2)
+x1
+x2<-seq(1,11,2)
+x2
+x3<-runif(6)
+x3
+Xcol <- cbind(x1,x2,x3)
+Xcol
+Xfil<-rbind(x1,x2,x3)
+Xfil
+x<-Xfil[1:3,c(2,3)]
+x
 ```
 

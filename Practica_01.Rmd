@@ -280,13 +280,22 @@ xt
 ```
 \begin {itemize}
 \item Ejemplo 2: u = exp(y);u (crea un nuevo vector de la misma longitud que y, en el cual cada
+
 elemento es la exponencial elevando a su respectivo elemento en y).
-\end {itemize}
+\begin{verbatim}
 
 ```{r}
 u=exp(y)
 u
 ```
+\end{verbatim}
+\end {itemize}  
+
+```{r}
+u=exp(y)
+u
+```
+
 \begin {itemize}
 \item options(digits=10); u Permite visualizar un mínimo de 10 dígitos
 \end {itemize}
@@ -422,20 +431,7 @@ B
 \item[] x2 <- seq(1, 11, 2); x2
 \item[] x3 <- runif(6); x3 Vector con valores de una uniforme(0,1)
 \end{description}
-\item Unir los tres vectores en una matriz por columnas.
-\begin{description}
-\item[] Xcol <- cbind(x1, x2, x3); Xcol
-\end{description}
-\item Unir los tres vectores en una matriz por filas.
-\begin{description}
-\item[] Xfil <- rbind(x1, x2, x3); Xfil
-\end{description}
-\item Acceso a las filas y columnas de una matriz.
-\begin{description}
-\item[] X <- Xfil[1:3, c(2, 3)]; X (crea una submatriz de dimensión 3x2 (el 3 se indica por 1:3), las
-columnas están conformadas por la segunda y tercera columna de la matriz Xfill (se indica por C(2,3))
-\end{description}
-\end{enumerate}
+\begin{verbatim}
 
 ```{r}
 x1<-seq(0,10,2)
@@ -444,11 +440,177 @@ x2<-seq(1,11,2)
 x2
 x3<-runif(6)
 x3
+```
+\end{verbatim}
+\item Unir los tres vectores en una matriz por columnas.
+\begin{description}
+\item[] Xcol <- cbind(x1, x2, x3); Xcol
+\end{description}
+\begin{verbatim}
+```{r}
 Xcol <- cbind(x1,x2,x3)
 Xcol
+```
+\end{verbatim}
+\item Unir los tres vectores en una matriz por filas.
+\begin{description}
+\item[] Xfil <- rbind(x1, x2, x3); Xfil
+\end{description}
+\begin{verbatim}
+```{r}
 Xfil<-rbind(x1,x2,x3)
 Xfil
+```
+\end{verbatim}
+\item Acceso a las filas y columnas de una matriz.
+\begin{description}
+\item[] X <- Xfil[1:3, c(2, 3)]; X (crea una submatriz de dimensión 3x2 (el 3 se indica por 1:3), las
+columnas están conformadas por la segunda y tercera columna de la matriz Xfill (se indica por C(2,3))
+\end{description}
+\begin{verbatim}
+```{r}
 x<-Xfil[1:3,c(2,3)]
 x
 ```
+\end{verbatim}
+\end{enumerate}
+
+## OPERACIONES CON MATRICES NUMÉRICAS.
+
+\textbf{MULTIPLICACIÓN DE MATRICES MATRICES NUMÉRICAS:}
+
+\begin{itemize}
+\item Ejemplo 1: Multiplicación de un vector por una matriz: v<-c(1, 2); v \%*\% A
+\begin{verbatim}
+```{r}
+v<-c(1,2)
+A
+v%*%A
+```
+
+\end{verbatim}
+\item Ejemplo 2: Multiplicación de matrices: P <- A \%*\% B; P
+\begin{verbatim}
+```{r}
+P<-A%*%B
+A
+B
+P
+```
+
+\end{verbatim}
+\item Ejemplo 3: Multiplicación de un escalar por una matriz: 2*A (nótese que al usar 2\%*\%A se obtiene un error pues las dimensiones no son compatibles).
+\begin{verbatim}
+```{r}
+2*A
+```
+\end{verbatim}
+\end{itemize}
+
+**OPERACIONES DE FUNCIONES SOBRE MATRICES NUMÉRICAS:**
+
+- Ejemplo 1: Longitud o número de elementos: length(A)
+
+```{r}
+length(A)
+```
+
+
+- Ejemplo 2: T=sqrt(B); T (observe que la raíz se saca a cada elemento de la matriz)
+
+```{r}
+T=sqrt(B)
+T
+```
+
+- Ejemplo 3: Transpuesta de una matriz: t(A)
+
+```{r}
+t(A)
+```
+
+- Ejemplo 4: Determinante de una matriz: C <- matrix(c(2, 1, 10, 12), nrow=2, ncol=2); C
+det(C)
+
+```{r}
+C<-matrix(c(2,1,10,12), nrow = 2, ncol = 2)
+C
+det(C)
+```
+
+- Ejemplo 5: Inversa de una matriz, resulta de resolver el sistema Ax = b con b=I: InvC <- solve(C) ; InvC O también: b=diag(2); InvC<-solve(C, b); InvC
+
+```{r}
+InvC<-solve(C)
+InvC
+b=diag(2)
+InvC<-solve(C,b)
+InvC
+```
+
+- Ejemplo 6: Autovalores y autovectores de uma matriz simétrica: eigen(C)
+
+```{r}
+eigen(C)
+```
+
+- Ejemplo 7: La función diag(nombMatriz), devuelve un vector formado por los elementos en la diagonal de la matriz nombMatriz.
+
+```{r}
+diag(C)
+```
+
+- Ejemplo 8: La función diag(nomVector), devuelve una matriz diagonal cuyos elementos en la diagonal son los elementos del vector nomVector.
+
+```{r}
+diag(v)
+```
+
+- Ejemplo 9: La función diag(escalar), devuelve la matriz identidad de tamaño nxn.
+
+```{r}
+diag(2)
+```
+
+**OTRAS OPERACIONES:**
+
+- Ejemplo 1: c(length(A), sum(A), prod(A), min(A), max(A))
+
+```{r}
+c(length(A), sum(A), prod(A), min(A), max(A))
+A
+```
+
+- Ejemplo 2: O <- matrix(sort(C), nrow=2, ncol=2); O (sort() genera un vector en los cuales sus elementos han sido ordenados de menor a mayor a partir de los elementos de la matriz C).
+
+```{r}
+o<-matrix(sort(C), nrow = 2, ncol = 2)
+o
+C
+```
+
+## CREACIÓN DE UNA MATRIZ DE CADENAS
+
+- Ejemplo 1: nombres <- matrix(c("Carlos", "José", "Ana", "René", "María", "Mario"), nrow=3, ncol=2); nombres
+
+```{r}
+nombres<-matrix(c("Carlos","Jose","Ana","Rene","Maria","Mario"), nrow = 3, ncol = 2)
+nombres
+```
+
+# CREACIÓN Y MANEJO DE MATRICES INDEXADAS (ARRAY).
+ 
+Una variable indexada (array) es una colección de datos, por ejemplo numéricos, indexada por
+varios índices. R permite crear y manipular variables indexadas en general y en particular, matrices.
+Una variable indexada puede utilizar no sólo un vector de índices, sino incluso una variable
+indexada de índices, tanto para asignar un vector a una colección irregular de elementos de una
+variable indexada como para extraer una colección irregular de elementos.
+\newline
+\newline
+Un vector es un array unidimensional y una matiz es un array bidimensional.
+\newline
+\newline
+Una variable indexada se construye con la función array(), que tiene la forma general siguiente:
+
+NombMatriz <- array(vector_de_datos, vector_de_dimensiones)
 

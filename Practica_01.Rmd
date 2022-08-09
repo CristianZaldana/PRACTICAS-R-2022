@@ -611,6 +611,65 @@ Un vector es un array unidimensional y una matiz es un array bidimensional.
 \newline
 \newline
 Una variable indexada se construye con la función array(), que tiene la forma general siguiente:
+\begin{center}
+\textbf{NombMatriz <- array(vector\_de\_datos, vector\_de\_dimensiones}
+\end{center}
 
-NombMatriz <- array(vector_de_datos, vector_de_dimensiones)
+- Ejemplo 1: X <- array(c(1, 3, 5, 7, 9, 11), dim=c(2, 3)); X
+```{r}
+X<-array(c(1,3,5,7,9,11), dim = c(2,3))
+X
+```
+
+- Ejemplo 2: Z <- array(1, c(3, 3)); Z
+```{r}
+Z<-array(1,c(3,3))
+Z
+```
+
+- Ejemplo 3: Operaciones aritméticas: W <- 2*Z+1; W
+```{r}
+W<-2*Z+1
+W
+```
+
+- Ejemplo 4: Operaciones con funciones: TX <- t(X); TX
+```{r}
+TX<-t(X)
+TX
+```
+
+- Ejemplo 5: Producto exterior de dos vectores con: operador \%o\%
+\begin{description}
+\item[] a <- c(2, 4, 6); a
+\item[] b <- 1:3;b
+\item[] M <- a \%o\% b; M \# M es un array o matriz.
+\end{description}
+
+```{r}
+a<-c(2,4,6)
+a
+b<-1:3
+b
+M<-a%o%b
+M
+```
+
+Nota: c <- a \* b; c devuelve un vector con el producto de elemento por elemento
+
+En R se distingue entre matrices y arrays: las matrices son colecciones de elementos indexados por
+filas y columnas; los arrays son extensiones de ellas donde el conjunto de índices o dimensiones
+puede ser mayor que dos.
+
+- Ejemplo 6. Una matriz de tres dimensiones (i, j, k)
+
+\begin{description}
+\item[] Arreglo3 <- array(c(1:8, 11:18, 111:118), dim = c(2, 4, 3));
+\item[] Arreglo3 \# un arreglo de 3 matrices cada una de 2 filas y 4 columnas.
+\end{description}
+
+```{r}
+Arreglo3<-array(c(1:8, 11:18,111:118), dim = c(2,4,3))
+Arreglo3
+```
 

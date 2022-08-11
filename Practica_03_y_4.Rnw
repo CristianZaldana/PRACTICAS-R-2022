@@ -1,0 +1,694 @@
+
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage {ragged2e}
+\usepackage{enumerate}
+\usepackage{booktabs}
+\usepackage[normalem]{ulem}
+\usepackage[Lenny]{fncychap}
+\usepackage[spanish]{babel}
+\usepackage[labelfont=bf]{caption}
+\usepackage{longtable}
+\usepackage{float}
+\usepackage{fancyhdr}
+\usepackage{geometry}
+\geometry{left=2.5cm,right=2.5cm,bottom=3.5cm,top=2cm}
+\pagestyle{fancy}
+\rhead{\includegraphics[width=2cm, height=2cm]{logo1}}
+\lhead{}
+\chead{\textbf{UNIVERSIDAD DE EL SALVADOR \\ FACULTAD MULTIDISCIPLINARIA DE OCCIDENTE \\ DEPARTAMENTO DE MATEMÁTICA}}
+\lfoot{\textit{CICLO II 2022}}
+\rfoot{\textbf{PRÁCTICA 3 y 4 (R)}}
+\setlength{\headheight}{60.50525pt}
+\renewcommand{\headrulewidth}{1pt}
+\renewcommand{\footrulewidth}{0.5pt}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+\thispagestyle{empty}
+\centering{\textbf{UNIVERSIDAD DE EL SALVADOR}}\\
+\vspace{1cm}
+\centering{\textbf{FACULTAD MULTIDISCIPLINARIA DE OCCIDENTE}}\\
+\vspace{1cm}
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=6cm, height=6cm]{logo1.jpg}
+\end{center}
+\end{figure}
+\vspace{1cm}
+\begin{center}
+\textbf{PRACTICA 3 y 4 DE R}\\
+\vspace{2cm}
+\textbf{DOCENTE:}\\
+\vspace{2cm}
+\textbf{LIC. JAIME ISAAC PEÑA}\\
+\vspace{2cm}
+\textbf{PRESENTADO POR:}\\
+\vspace{2cm}
+\textbf{CRISTIAN ALBERTO ZALDAÑA ALVARADO}
+\end{center}
+\newpage
+\tableofcontents
+\newpage
+\SweaveOpts{concordance=TRUE}
+
+
+\section{PRÁCTICA 3: Factores, listas y hojas de datos, operadores y funciones que operan sobre ellos.}
+
+\subsection{FACTORES NOMINALES Y ORDINALES.}
+
+\justify 
+Un factor es un vector utilizado para especificar una clasificación discreta de los elementos de otro
+vector de igual longitud. En R existen factores nominales y factores ordinales. Los factores son útiles
+a la hora de querer hacer contrastes o de calcular medidas de resúmenes para variables numéricas
+en distintos niveles de una segunda variable la cual es no numérica.
+
+
+\vspace{1cm}
+
+\subsubsection{FACTORES NOMINALES.}
+
+\begin{itemize}
+\item Ejemplo 1: Variables sexo (categórica) y edad en una muestra de 7 alumnos del curso.
+\end{itemize}
+
+
+Supongamos que se obtuvieron los siguientes datos:
+sexo <- c("M", "F", "F", "M", "F", "F", "M"); sexo
+edad <- c(19, 20, 19, 22, 20, 21, 19); edad
+
+<<>>=
+sexo<-c("M","F","F","M","F","F","M")
+sexo
+edad<-c(19,20,19,22,20,21,19)
+edad
+@
+
+Podemos construir un factor con los niveles o categorias de sexo
+
+FactorSexo = factor(sexo); FactorSexo
+
+<<>>=
+FactorSexo=factor(sexo)
+FactorSexo
+@
+
+Se pueden ver los niveles o categorías del factor con: levels(FactorSexo)
+
+<<>>=
+levels(FactorSexo)
+@
+
+Crear una tabla que contenga la media muestral por categoría de sexo (nivel del factor):
+mediaEdad <- tapply(edad, FactorSexo, mean); mediaEdad
+
+<<>>=
+mediaEdad<-tapply(edad, FactorSexo, mean)
+mediaEdad
+@
+
+Note que el primer argumento debe ser un vector, que es del cual se encontrarán las medidas
+de resumen; el segundo es el factor que se está considerando, mientras que en el tercero se
+especifica la medida de interés, solamente puede hacerse una medida a la vez.\\
+
+¿Qué tipo de objeto es la variable mediaEdad?: is.vector(mediaEdad); is.matrix(mediaEdad);
+is.list(mediaEdad); is.table(mediaEdad); is.array(mediaEdad)
+
+<<>>=
+is.vector(mediaEdad)
+is.matrix(mediaEdad)
+is.list(mediaEdad)
+is.table(mediaEdad)
+is.array(mediaEdad)
+@
+
+\subsubsection{FACTORES ORDINALES}
+
+Los niveles de los factores se almacenan en orden alfabético, o en el orden en que se especificaron en
+la función factor() si ello se hizo explícitamente.\\
+
+A veces existe una ordenación natural en los niveles de un factor, orden que deseamos tener en
+cuenta en los análisis estadísticos. La función ordered() crea este tipo de factores y su uso es idéntico
+al de la función factor(). Los factores creados por la función factor() los denominaremos nominales o
+simplemente factores cuando no haya lugar a confusión, y los creados por la función ordered() los
+denominaremos ordinales. En la mayoría de los casos la única diferencia entre ambos tipos de
+factores consiste en que los ordinales se imprimen indicando el orden de los niveles. Sin embargo,
+los contrastes generados por los dos tipos de factores al ajustar Modelos lineales, son diferentes.
+
+\subsection{CREACIÓN Y MANEJO DE LISTAS.}
+
+Una lista es un objeto que contiene una colección ordenada de objetos de diferente tipo (vector,
+matriz, arreglo, función, o lista), conocidos como componentes. Se construye con la función list(),
+que tiene la forma general siguiente:
+
+\begin{center}
+\textbf{Lista <- list(nombre1 = objeto1, nombre2 = objeto2, ..., nombren = objeton)}
+\end{center}
+
+Si omite los nombres, las componentes sólo estarán numeradas.
+Las componentes pueden accederse por su número o posición, ya que siempre están numeradas, o
+también pueden referirse por su nombre, si lo tienen.
+
+\begin{itemize}
+\item Ejemplo 1: Crear una Lista con cuatro componentes.
+\end{itemize}
+
+lista1<-list(padre="Pedro", madre="María", no.hijos=3, edad.hijos=c(4,7,9))
+lista1
+
+<<>>=
+lista1<-list(padre="Pedro", madre="María", no.hijos=3, edad.hijos=c(4,7,9))
+lista1
+@
+
+Revise algunos tipos como: is.matrix(lista1); is.vector(lista1\$edad.hijos)
+
+\begin{itemize}
+\item Ejemplo 2: Acceso a las componentes de una lista:
+\end{itemize}
+
+lista1[1] accede a la componente como una lista (con etiqueta y valor)
+lista1["padre"] el acceso es igual que con lista1[1]
+lista1[[2]] accede al valor o valores de la componente segunda pero no muestra el nombre de
+la componente.
+lista1["madre"] el acceso es igual que con lista1[[1]]
+
+<<>>=
+lista1[1]
+lista1["padre"]
+lista1[[2]]
+lista1["madre"]
+@
+
+\begin{itemize}
+\item Ejemplo 3: Acceso a los elementos de la cuarta componente: lista1[[4]][2] (se indica el
+elemento a ingresar en el segundo corchete)
+
+<<>>=
+lista1[[4]][2]
+@
+
+\item Ejemplo 4: Acceso de las componentes de una lista por su nombre: lista\$padre similar a
+lista1["padre"].
+
+<<>>=
+lista1$padre
+@
+\end{itemize}
+
+Forma general: \textbf{Nombre\_de\_lista\$nombre\_de\_componente}
+
+Por ejemplo: lista1\$padre equivale a lista1[[1]]; y lista1\$edad.hijos[2] equivale a lista1[[4]][2].
+
+\begin{itemize}
+\item {Ejemplo 5: Utilizar el nombre de la componente como índice:}\\
+lista1[["nombre"]] se puede ver que equivale a lista1\$nombre\\
+También es útil la forma: x <- "nombre"; lista1[x]
+
+<<>>=
+lista1[["nombre"]]
+@
+
+\item Ejemplo 6: Creación de una sublista de una lista existente:\\
+subLista <- lista1[4]; subLista\\
+
+<<>>=
+sublista<-lista1[4]
+sublista
+@
+
+\item Ejemplo 7: Ampliación de una lista: por ejemplo, la lista lista1 tiene 4 componentes y se le
+puede agregár una quinta componente con:\\
+lista1[5] <- list(sexo.hijos=c("F", "M", "F")); lista1
+
+<<>>=
+lista1[5] <- list(sexo.hijos=c("F", "M", "F"))
+lista1
+@
+
+\end{itemize}
+
+Observe que no aparece el nombre del objeto agregado, pero usted puede modificar la estructura de
+la lista lista1 con: lista1 <- edit(lista1)\\
+
+\textbf{Nota: Se puede aplicar la función data.entry() para modificar la estructura de una lista.}
+
+\begin{itemize}
+\item Ejemplo 8: Funciones que devuelven una lista.
+\end{itemize}
+
+Las funciones y expresiones de R devuelven un objeto como resultado, por tanto, si deben devolver
+varios objetos, previsiblemente de diferentes tipos, la forma usual es una lista con nombres. Por
+ejemplo, la función eigen() que calcula los autovalores y autovectores de una matriz simétrica.\\
+
+Ejecute las siguientes instrucciones:
+
+\hspace{1cm} S <- matrix(c(3, -sqrt(2), -sqrt(2), 2), nrow=2, ncol=2); S
+
+\hspace{1cm} autovS <- eigen(S); autovS
+
+<<>>=
+S <- matrix(c(3, -sqrt(2), -sqrt(2), 2), nrow=2, ncol=2)
+S
+autovS <- eigen(S)
+autovS
+@
+
+
+Observe que la función eigen() retorna una lista de dos componentes, donde la componente
+autovS\$values es el vector de autovalores de S y la componente autovS\$vectors es la matriz de los correspondientes autovectores. Si quisiéramos almacenar sólo los autovalores de S, podemos hacer lo siguiente:
+
+\hspace{1cm} evals <- eigen(S)\$values; evals
+
+<<>>=
+evals<-eigen(S)$values
+evals
+@
+
+\begin{itemize}
+\item Ejemplo 9: Crear una matriz dando nombres a las filas y columnas\\
+Notas <- matrix(c(2, 5, 7, 6, 8, 2, 4, 9, 10), ncol=3,\\
+dimnames=list(c("Matemática","Álgebra","Geometría"),\\
+c("Juan","José","René"))); Notas\\
+Los nombres se dan primero para filas y luego para columnas.
+\end{itemize}
+
+<<>>=
+Notas <- matrix(c(2, 5, 7, 6, 8, 2, 4, 9, 10), ncol=3,
+dimnames=list(c("Matemática","Álgebra","Geometría"),
+c("Juan","José","René")))
+Notas
+@
+
+\subsection{CREACIÓN Y MANEJO DE HOJAS DE DATOS (DATA FRAME).}
+
+Una hoja de datos (data frame) es una lista que pertenece a la clase "data.frame". Un data.frame
+puede considerarse como una matriz de datos. Hay restricciones en las listas que pueden pertenecer
+a esta clase, en particular:
+
+\begin{itemize}
+\item Los componentes deben ser vectores (numéricos, cadenas de caracteres, o lógicos), factores,
+matrices numéricas, listas u otras hojas de datos.
+\item Las matrices, listas, y hojas de datos contribuyen a la nueva hoja de datos con tantas
+variables como columnas, elementos o variables posean, respectivamente.
+\item Los vectores numéricos y los factores se incluyen sin modificar, los vectores no numéricos se
+fuerzan a factores cuyos niveles son los únicos valores que aparecen en el vector.
+\item Los vectores que constituyen la hoja de datos deben tener todos la misma longitud, y las
+matrices deben tener el mismo tamaño de filas.
+\end{itemize}
+
+Las hojas de datos pueden interpretarse, en muchos sentidos, como matrices cuyas columnas
+pueden tener diferentes modos y atributos. Pueden imprimirse en forma matricial y se pueden
+extraer sus filas o columnas mediante la indexación de matrices. En una hoja de datos cada columna
+corresponde a una variable y cada fila a un elemento del conjunto de observaciones.
+
+\begin{itemize}
+\item Ejemplo 1: Creación de un data frame teniendo como columnas tres vectores:
+\end{itemize}
+
+\textbf{En primer lugar generamos los tres vectores}
+
+El primer vector tendrá 20 elementos que se obtienen con reemplazamiento de una muestra
+aleatoria de valores lógicos.
+
+\hspace{1cm} log <- sample(c(TRUE, FALSE), size = 20, replace = T); log
+
+\hspace{1cm} Note que puede usar T en lugar de TRUE y F en lugar de FALSE.
+
+<<>>=
+log <- sample(c(TRUE, FALSE), size = 20, replace = T)
+log
+@
+
+El segundo vector tendrá 20 elementos de valores complejos cuya parte real proviene de una
+distribución Normal estándar y cuya parte imaginaria lo hace de una distribución Uniforme(0,1)
+
+\hspace{1cm} comp <- rnorm(20) + runif(20) \* (1i); comp
+
+<<>>=
+comp <- rnorm(20) + runif(20) * (1i)
+comp
+@
+
+
+El tercer vector tendrá 20 elementos de una distribución Normal estándar
+
+\hspace{1cm} num <- rnorm(20, mean=0, sd=1); num
+
+<<>>=
+num <- rnorm(20, mean=0, sd=1)
+num
+@
+
+Crear un data frame compuesto por los tres vectores anteriores
+
+\hspace{1cm} df1 <- data.frame(log, comp, num); df1
+
+<<>>=
+df1<-data.frame(log, comp, num)
+df1
+@
+
+
+Crear un vector de nombres de los tres vectores anteriores
+
+\hspace{1cm} nombres <- c("logico", "complejo", "numerico")
+
+<<>>=
+nombres<-c("logico", "complejo","numerico")
+@
+ 
+
+Define los nombres de las columnas del data frame asignándoles el vector nombres
+
+\hspace{1cm} names(df1) <- nombres; df1
+
+<<>>=
+names(df1)<-nombres
+df1
+@
+
+Define los nombres de las filas del data frame asignándoles un vector de 20 elementos
+correspondientes a las 20 primeras letras del abecedario
+
+\hspace{1cm} row.names(df1) <- letters[1:20]; df1
+
+<<>>=
+row.names(df1)<-letters[1:20]
+df1
+@
+
+Ejemplo 2: Vamos a crear la siguiente hoja de datos que tiene 4 variables o columnas:
+
+\begin{center}
+Edad Estatura Peso Sexo\\
+1 18  150 65 F\\
+2 21  160 68 M\\
+3 45  180 65 M\\
+4 54  205 69 M
+\end{center}
+
+<<>>=
+edad <- c(18, 21, 45, 54)
+edad
+datos <- matrix(c(150, 160, 180, 205, 65, 68, 65, 69), ncol=2, dimnames=list(c(),
+c("Estatura","Peso")))
+datos
+sexo <- c("F", "M", "M", "M")
+sexo
+hoja1 <- data.frame(Edad=edad, datos, Sexo=sexo)
+hoja1
+@
+
+Para editar o agregar datos, o componentes utilice: fix(hoja1)
+
+\textbf{Nota: Puede forzar que una lista, cuyos componentes cumplan las restricciones para ser una
+hoja de datos, realmente lo sea, mediante la función as.data.frame()}
+
+\subsubsection{ACCESO A LAS COMPONENTE O VARIABLES DE UNA HOJA DE DATOS.}
+
+Normalmente para acceder a la componente o variable Edad de la hoja de datos se utilizará la
+expresion hoja1\$Edad, pero existe una forma más sencilla, consiste en "conectar" la hoja de datos
+para que se pueda hacer referencia a sus componentes directamente por su nombre.
+
+\textbf{Conexión de listas o hojas de datos.}
+
+La función search() busca y presenta qué hojas de datos, listas o bibliotecas han sido conectadas o
+desconectadas. Teclee search()\\
+
+<<>>=
+search()
+@
+
+La función attach() es la función que permite conectar en la trayectoria de búsqueda no sólo
+directorios, listas y hojas de datos, sino también otros tipos de objetos. Teclee attach(hoja1) y
+luego search()
+
+<<>>=
+attach(hoja1)
+search()
+@
+
+Luego puede acceder a las componentes por su nombre:
+
+\hspace{1cm} Edad
+
+\hspace{1cm} hoja1\$Peso <- Peso+1; hoja1
+
+<<>>=
+Edad
+hoja1$Peso<-Peso+1
+hoja1
+@
+
+Posteriormente podrá desconectar el objeto utilizando la función detach(), utilizando como
+argumento el número de posición o, preferiblemente, su nombre. Teclee detach(hoja1) y compruebe
+que la hoja de datos ha sido eliminada de la trayectoria de búsqueda con search().
+
+<<>>=
+detach(hoja1)
+search()
+@
+
+Pruebe si puede acceder a una componente sólo con su nombre, por ejemplo, Teclee Edad
+
+<<>>=
+# Edad, no se puede acceder
+@
+
+\subsubsection{TRABAJO CON HOJAS DE DATOS}
+
+\begin{itemize}
+\item Una metodología de trabajo para tratar diferentes problemas utilizando el mismo directorio de
+trabajo es la siguiente:
+\item Reúna todas las variables de un mismo problema en una hoja de datos y dé le un nombre
+apropiado e informativo;
+\item Para analizar un problema, conecte, mediante attach(), la hoja de datos correspondiente (en
+la posición 2) y utilice el directorio de trabajo (en la posición 1) para los cálculos y variables
+temporales;
+\item Antes de terminar un análisis, añada las variables que deba conservar a la hoja de datos
+utilizando la forma \$ para la asignación y desconecte la hoja de datos mediante detach();
+\item Para finalizar, elimine del directorio de trabajo las variables que no desee conservar, para
+mantenerlo lo más limpio posible.
+\end{itemize}
+
+De este modo podrá analizar diferentes problemas utilizando el mismo directorio, aunque todos
+ellos compartan variables denominadas x, y o z, por ejemplo.
+
+\section{PRÁCTICA 4: Importación y exportación de datos en R}
+
+Generalmente los datos suelen leerse desde archivos externos y no teclearse desde la consola. Las
+capacidades de lectura de archivos de R son sencillas y sus requisitos son bastante estrictos, por lo
+que hay que tenerlas muy en cuenta, de lo contrario los resultados en la lectura no serán los
+esperados.
+
+\subsection{USO DE LA FUNCIÓN READ.TABLE().}
+
+Ejemplo: Guardar (escribir) determinados datos en un archivo de texto (ASCII) y luego recuperar
+(leer) dicho archivo desde R.
+
+\begin{enumerate}
+\item Cambiar el directorio de trabajo a su directorio de trabajo, en el cual ha almacenado sus
+prácticas, desde el menú File.
+\item Abrir el R Editor para crear un nuevo script desde el menú File.
+\item En la ventana del R Editor, teclee los datos tal como se muestra:\\
+
+Observaciones:
+
+\begin{itemize}
+\item La primera línea del archivo debe contener el nombre de cada objeto o variable.
+\item En cada una de las siguientes líneas, el primer elemento es la etiqueta de la fila, y a
+continuación deben aparecer los valores de cada variable.
+\item Si el archivo tiene un elemento menos en la primera línea que en las restantes,
+obligatoriamente será el diseño anterior el que se utilice.
+\item A menudo no se dispone de etiquetas de filas. En ese caso, también es posible la lectura y el
+programa añadirá unas etiquetas predeterminadas.
+\item La última línea debe finalizar con ENTER para que R reconozca el fin del archivo.
+\end{itemize}
+\item Oprimir con el puntero del ratón el icono que representa un disquete (Save script as) y guarde
+el archivo con el nombre "datos01.txt". También puede darle el nombre de “datos01.dat” (otro
+formato soportado por la función read.table), e incluso puede leer datos directamente desde
+una página de internet, solamente proporcionando la dirección URL completa.\\
+
+También puede realizar estos pasos utilizando un editor de texto como NotePad o WordPad.
+
+\item Recuperar los objetos o datos guardados en el archivo "datos01.txt"\\
+Entrada1 <- read.table("datos01.txt", header=T);Entrada1\\
+Entrada2 <- read.table("datos01.dat", header=T);Entrada2\\
+No existe diferencia entre ambos archivos a la hora de leerlos
+
+<<>>=
+Entrada1 <- read.table("datos01.txt", header=T)
+Entrada1
+Entrada2 <- read.table("datos01.dat", header=T)
+Entrada2
+@
+
+\end{enumerate}
+
+\subsection{USO DE LA FUNCIÓN SCAN().}
+
+La función scan() es más flexible que read.table() y permite realizar lecturas más complejas, como
+puede consultar en la ayuda: help(scan)
+
+\begin{itemize}
+\item Ejemplo 1: Leer sólo las dos primeros objetos o columnas del archivo "datos01.txt"\\
+Edat1 <- scan("datos01.txt", list(X1=0, X2=0), skip = 1, flush = TRUE, quiet = TRUE);Edat1\\
+Edat2<- scan("datos01.dat", list(X1=0, X2=0), skip = 1, flush = TRUE, quiet = TRUE);Edat2\\
+
+Observe que en list(X1=0, X2=0) se les da el nombre a las dos primeras columnas o
+variables (puede darle el nombre que crea más conveniente) y se indica que son variables
+numéricas; sin embargo, del archivo únicamente se leen las dos primeras columnas, si se
+quisiera leer las columnas primera y tercera, nos veríamos obligados a leer las tres
+primeras.\\
+
+Note que si escribimos list(0, 0), indica que se leerán las dos primeras columnas del
+archivos y que los datos leídos son numéricos (asigna nombres por defecto). Para indicar
+que los datos que se leen son cadenas se utiliza “” en lugar de 0.
+
+<<>>=
+Edat1 <- scan("datos01.txt", list(X1=0, X2=0), skip = 1, flush = TRUE, quiet = TRUE)
+Edat1
+Edat2<- scan("datos01.dat", list(X1=0, X2=0), skip = 1, flush = TRUE, quiet = TRUE)
+Edat2
+@
+
+\item Ejemplo 2: Crear un archivo con la función cat() y luego recuperarlo\\
+cat("TITULO Línea extra", "2 3 5 7", "11 13 17", file="datos02.txt", sep="\textbackslash n")\\
+
+El archivo lo recuperamos con la función scan():\\
+pp <- scan("datos02.txt", skip = 1, quiet= TRUE)
+
+<<>>=
+cat("TITULO Línea extra", "2 3 5 7", "11 13 17", file="datos02.txt", sep="\n")
+pp <- scan("datos02.txt", skip = 1, quiet= TRUE)
+pp
+@
+
+La función scan es muy útil cuando en el archivo de datos a importar cada línea
+representa un único caso. En caso contrario (cada cierta cantidad de columnas representa un
+caso) es mucho más fácil y recomendable utilizar la función read.table.
+\end{itemize}
+
+\subsection {USO DE LA FUNCIÓN READ.CSV().}
+
+Leer un conjunto de datos de Microsoft Excel pero los datos no están almacenados en el formato
+conocido de Excel “.xls”, sino más bien un formato menos conocido como “.csv”.
+
+\begin{enumerate}
+\item Ingresar al Microsoft Excel y crear la hoja de datos siguiente:\\
+
+Observe que debe guardar la hoja Excel en su directorio de trabajo y que el archivo debe ser de
+tipo: CSV(delimitado por comas)
+
+\item Regresar al entorno de R y recuperar el archivo "HojaE1.csv".
+
+<<>>=
+hojaR <- read.csv("HojaE1.csv", sep = ";", strip.white = TRUE)
+hojaR
+@
+
+\end{enumerate}
+
+\textbf{Note que R ha reemplazado “–“ en los encabezados de las columnas por “.”; en general
+reemplazará cualquier carácter.}\\
+
+Puede investigar el tipo de objeto que es hojaR con:
+
+<<>>=
+is.matrix(hojaR)
+is.list(hojaR)
+is.data.frame(hojaR)
+@
+
+Acceda a la componente Producto de hojaR con:
+
+<<>>=
+hojaR$Producto
+@
+
+Observe que R toma está columna (variable de caracteres) como un Factor Nominal, verifíquelo tecleando:
+<<>>=
+is.vector(hojaR$Producto)
+is.factor(hojaR$Producto)
+@
+
+¿Qué tipo de objeto es la columna Cantidad.S1?
+<<>>=
+is.vector(hojaR$Cantidad.S1)
+is.factor(hojaR$Cantidas.S1)
+@
+
+\subsection{USO DEL PAQUETE RODBC.}
+
+Si por el contrario los datos a los cuales deseamos realizar el análisis estadístico se encuentran en
+formato XLS (versión 2003 de Microsoft Excel), debemos de seguir los siguientes pasos
+(Ilustraremos el procedimiento con el archivo “contaminación\_mexico.xls”):
+
+\begin{itemize}
+\item Instalar el paquete RODBC, con la siguiente instrucción install.packages(c("RODBC")) o
+desde el menú como en el caso de la instalación del paquete Foreing.\\
+Con este procedimiento se instalan los paquetes directamente desde internet, es
+necesario para ello contar con una conexión a internet en el momento. Posteriormente se
+selecciona un mirror (un servidor desde el cual se descargarán los paquetes), y finalmente
+buscar el paquete deseado del listado.
+
+\item Cargar el paquete con la siguiente instrucción: library(RODBC)
+
+<<>>=
+library(RODBC)
+@
+
+\item Seleccionar el archivo (el cual puede contener más de una hoja de datos)
+“contaminación\_mexico.xls”, con la instrucción: 
+<<>>=
+#datos.xls <- odbcConnectExcel(file.choose())
+@
+
+\item Seleccionar la hoja en la cual se encuentran los datos
+
+<<>>=
+#datoshoja1.xls <- sqlFetch(datos.xls,"contaminacion_mexico")
+@
+
+Con esta instrucción se indica la hoja en la cual se encuentran los datos con los que se
+desea trabajar (contaminación\_mexico) o cargar en R. Siempre es necesario especificarlo.
+
+\item Realizar los análisis o cálculos correspondientes.
+
+\end{itemize}
+
+\subsection{IMPORTAR DATOS DE SPSS HACIA R.}
+
+A parte de leer archivos en formato texto y delimitados por comillas, R permite leer datos en una
+gran variedad de formato entre ellos se encuentra archivos el formato de SPSS “.sav”. Para poder
+leerlos primero debemos de cargar el paquete correspondiente en el cual se encuentran la función
+que nos permitirá leer los ficheros de datos. Para el caso de SPSS, debe cargar el paquete foreign. El
+cual es necesario para lectura y escritura de datos.\\
+
+Para leer los datos se usa la siguiente función Read.spss(“nombreArchivo”,
+use.values.labels.=FALSE, max.value.label=Inf, to.data.frame=T); donde use.values.labels=TRUE
+significa que si en el archivo existen variables categóricas que han sido previamente codificadas
+con su respectiva etiqueta, entonces se leerán directamente las etiquetas y no los valores de esta
+(por ejemplo, si 1 representa Femenino, se leerá Femenino en lugar de 1). to.data.frame =T indica
+que los datos serán almacenados en un data.frame, muy recomendable para análisis estadístico.
+Puede consultar más ayuda de la función con la instrucción help(read.spss).
+
+\begin{itemize}
+\item Instalar el paquete foreign, con la siguiente instrucción install.packages(c("foreign")) o
+desde el menú como en el caso de la instalación del paquete Foreing.
+\item Cargar el paquete con la siguiente instrucción:
+<<>>=
+library(foreign)
+@
+
+\item Leer el contenido del archivo “demo.sav”, con la instrucción:
+<<>>=
+head(read.spss("demo.sav", use.value.labels=TRUE, max.value.label=Inf, to.data.frame=T))
+@
+
+\item Realizar los análisis o cálculos correspondientes.
+\end{itemize}
+\end{document}
+

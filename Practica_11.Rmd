@@ -1,0 +1,160 @@
+---
+documentclass: article
+header-includes:
+- \usepackage[utf8]{inputenc}
+- \usepackage{graphicx}
+- \usepackage{enumerate}
+- \usepackage{booktabs}
+#- \usepackage[table,xcdraw]{xcolor}
+- \usepackage[normalem]{ulem}
+- \usepackage[Lenny]{fncychap}
+#- \usepackage[spanish]{babel}
+- \usepackage[labelfont=bf]{caption}
+- \usepackage{longtable}
+- \usepackage{float}
+- \usepackage{fancyhdr}
+- \usepackage{fancyheadings}
+- \pagestyle{fancy}
+- \rhead{\includegraphics[width=2cm, height=2cm]{logo1}}
+- \lhead{}
+- \chead{\textbf{UNIVERSIDAD DE EL SALVADOR \\ FACULTAD MULTIDISCIPLINARIA DE OCCIDENTE \\ DEPARTAMENTO DE MATEMÁTICA}}
+- \lfoot{\textit{CICLO II 2022}}
+- \rfoot{\textbf{PRÁCTICA 11 (R)}}
+- \setlength{\headheight}{60.50525pt}
+title: "Practica_11"
+author: "Cristian Zaldaña"
+date: "2022-08-17"
+geometry: "left=3cm, right=3cm, top=2.5cm, bottom=3.5cm"
+output: pdf_document
+lang: es-ES
+toc: TRUE
+---
+\newpage
+
+# Práctica 11-Análisis de una variable bidimensional cuantitativa 
+
+## Ejemplo 
+
+El tiempo que tarda un sistema informático en red en ejecutar una instrucción depende del número 
+de usuarios conectados a él. Sí no hay usuarios el tiempo es cero. Se tienen registrados los siguientes 
+datos: 
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=12cm,height=6cm]{bidimensional3.png}
+\end{center}
+\end{figure}
+
+- Crea los dos vectores para las dos variables\\
+Número de usuarios = Variable explicativa o independiente 
+
+```{r}
+usuarios <- c(10, 15, 20, 20, 25, 30, 30)
+usuarios 
+tiempo = c(1.0, 1.2, 2.0, 2.1, 2.2, 2.0, 1.9)
+tiempo 
+```
+
+- Crea una hoja de datos que tenga como componentes o columnas los dos vectores. 
+
+```{r}
+Sistema <- data.frame(Usuarios=usuarios, Tiempo=tiempo)
+Sistema 
+```
+
+Para editar o ampliar los datos puede utilizar la función fix() 
+
+```{r}
+#fix(Sistema) 
+```
+
+- Guarda la hoja de datos en un archivo. 
+
+```{r}
+write.table(Sistema, file="Sistema.txt", append=FALSE, quote=TRUE, sep=" ", na="NA", 
+col.names = TRUE)
+```
+
+- Recupera la hoja de datos. 
+
+```{r}
+Sistema <- read.table("Sistema.txt", header=TRUE)
+Sistema 
+```
+
+- Conecta la hoja de datos a la segunda ruta o lista de búsqueda. 
+
+```{r}
+attach(Sistema, pos=2)
+search() 
+```
+
+- Muestra un resumen de principales estadísticos de las variables. 
+
+```{r}
+summary(Sistema) 
+cov(Sistema) # Matriz de covarianzas 
+cor(Sistema, use = "all.obs", method="pearson") # Matriz de correlaciones
+```
+ 
+- Elabora un gráfico de dispersión para analizar alguna relación entre las variables. 
+
+```{r}
+plot(Usuarios, Tiempo, xlim= c(5, 35), ylim= c(0.0, 2.5), type = "p", pch=1, col = "blue", main = 
+"Grafico de dispersion (Usuarios, Tiempo)", xlab="Numero de usuarios", ylab="Tiempo de 
+ejecucion")
+
+```
+
+- Para identificar un punto arbitrario, se procede de la siguiente manera:\\
+Sin cerrar la ventana del gráfico anterior, ejecuta la siguiente instrucción 
+
+```{r}
+#identify(Usuarios, Tiempo, n=1) #n=1 indica que solamente será un punto seleccionado 
+```
+
+Y luego selecciona un punto en el gráfico haciendo clic con el ratón. Esto es útil para 
+identificar puntos que podrían ser atípicos.\\ 
+Deberá aparecer en la R-Console el índice que corresponde a este punto. 
+
+- Aplica la función lm() para encontrar el modelo lineal que se ajusta a los datos. 
+
+```{r}
+reg.Y.X <- lm(Tiempo ~ -1 + Usuarios, Sistema, na.action=NULL, method="qr", model=TRUE) 
+```
+
+-1 indica que no se toma en cuenta la constante en el modelo. 
+
+```{r}
+summary(reg.Y.X) 
+```
+
+Note que es necesaria la instrucción anterior para poder visualizar los resultados más 
+sobresalientes de la regresión encontrada. Nos muestra la estimación de los parámetros junto 
+con su significancia, el coeficiente de determinación. 
+
+- Agrega la recta de regresión al gráfico de dispersión. 
+
+```{r}
+plot(Usuarios, Tiempo, xlim= c(5, 35), ylim= c(0.0, 2.5), type = "p", pch=1, col = "blue", main = 
+"Grafico de dispersion (Usuarios, Tiempo)", xlab="Numero de usuarios", ylab="Tiempo de 
+ejecucion")
+abline (reg.Y.X) 
+```
+
+Observación: Alternativamente si quiere una recta más "exacta" use: 
+
+```{r}
+plot(Usuarios, Tiempo, xlim= c(5, 35), ylim= c(0.0, 2.5), type = "p", pch=1, col = "blue", main = 
+"Grafico de dispersion (Usuarios, Tiempo)", xlab="Numero de usuarios", ylab="Tiempo de 
+ejecucion")
+lines(Usuarios, 0.079437*Usuarios) 
+```
+
+- Efectúa una análisis de variabilidad del modelo o descomposición de la varianza. 
+
+```{r}
+reg.anova <- anova(reg.Y.X)
+reg.anova
+```
+

@@ -1,0 +1,306 @@
+\documentclass{article}
+\usepackage{enumerate}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage {ragged2e}
+\usepackage{enumerate}
+\usepackage{booktabs}
+\usepackage[normalem]{ulem}
+\usepackage[Lenny]{fncychap}
+\usepackage[spanish]{babel}
+\usepackage[labelfont=bf]{caption}
+\usepackage{longtable}
+\usepackage{float}
+\usepackage{fancyhdr}
+\usepackage{geometry}
+\geometry{left=2.5cm,right=2.5cm,bottom=3.5cm,top=2cm}
+\pagestyle{fancy}
+\rhead{\includegraphics[width=2cm, height=2cm]{logo1}}
+\lhead{}
+\chead{\textbf{UNIVERSIDAD DE EL SALVADOR \\ FACULTAD MULTIDISCIPLINARIA DE OCCIDENTE \\ DEPARTAMENTO DE MATEMÁTICA}}
+\lfoot{\textit{CICLO II 2022}}
+\rfoot{\textbf{PRÁCTICA 14 (R)}}
+\setlength{\headheight}{60.50525pt}
+\renewcommand{\headrulewidth}{1pt}
+\renewcommand{\footrulewidth}{0.5pt}
+
+\begin{document}
+\thispagestyle{empty}
+\centering{\textbf{UNIVERSIDAD DE EL SALVADOR}}\\
+\vspace{1cm}
+\centering{\textbf{FACULTAD MULTIDISCIPLINARIA DE OCCIDENTE}}\\
+\vspace{1cm}
+\centering{\textbf{DEPARTAMENTO DE MATEMÁTICAS}}\\
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=6cm, height=6cm]{logo1.jpg}
+\end{center}
+\end{figure}
+\begin{center}
+\textbf{PRACTICA 14 DE R}\\
+\vspace{1cm}
+\textbf{CARRERA:}\\
+\vspace{1cm}
+\textbf{LICENCIATURA EN ESTADÍSTICA}\\
+\vspace{1cm}
+\textbf{DOCENTE:}\\
+\vspace{1cm}
+\textbf{LIC. JAIME ISAAC PEÑA}\\
+\vspace{1cm}
+\textbf{PRESENTADO POR:}\\
+\vspace{1cm}
+\textbf{CRISTIAN ALBERTO ZALDAÑA ALVARADO}
+\end{center}
+\newpage
+\tableofcontents
+\newpage
+\SweaveOpts{concordance=TRUE}
+
+\section{CÁLCULO DE PROBABILIDADES. }
+
+\begin{itemize}
+\item \textbf{Ejemplo 1:}\\
+Si un estudiante responde al azar a un examen de 8 preguntas de verdadero o falso. 
+\begin{enumerate}[a)]
+\item ¿Cuál es la probabilidad de que acierte 4? $\mathrm{P}[\mathrm{X}=4]$ \\
+La variable X="número de aciertos" sigue una distribución Binomial de parámetros n = 8 y p =1/2
+( p probabilidad de éxito)
+
+Para $ \mathrm{P}[\mathrm{X}=4]=\left(\begin{array}{l}8 \\ 4\end{array}\right)
+\cdot(0.5)^4 \cdot(0.5)^{(8-4)}=0.2734375 $ \\
+
+<<>>=
+#usando la funciones propias de R 
+dbinom(4,8,0.5) 
+# dbinom calcula la probabilidad en un valor concreto 
+@
+
+\item  ¿Cuál es la probabilidad de que acierte a lo sumo 2? $\mathrm{P}[\mathrm{X} \leq 2]$
+
+<<>>=
+x <- 2
+n=8
+p=1/2
+pbinom(x, size = n, prob = p, lower.tail=TRUE)
+# pbinom es la función de distribución acumulada
+@
+
+\item  ¿Cuál es la probabilidad de que acierte 5 o más? $\mathrm{P}[\mathrm{X} \geq 5]$
+
+<<>>=
+x <- 4
+n=8
+p=1/2
+#primera forma
+F <- 1 - pbinom(x, n, p, lower.tail=TRUE)
+F
+#segunda forma
+pbinom(4, size=8, prob=0.5, lower.tail=FALSE)
+@
+
+\end{enumerate}
+
+\item \textbf{Ejemplo 2:}\\
+Una cierta área de Estados Unidos es afectada, en promedio, por 6 huracanes al año. Encuentre la 
+probabilidad de que en un determinado año esta área sea afectada por:
+
+\begin{enumerate}[a)]
+
+\item Menos de 4 huracanes. $\mathrm{P}[\mathrm{X}<4]=\mathrm{F}(3)$
+
+Se define la variable X = "número de huracanes por año" y asumiendo que dicha variable tiene una 
+distribución de Poisson de parámetro $\lambda = 6$, porque describe el número de éxitos por unidad de 
+tiempo y porque son independientes del tiempo desde el último evento. Se calcularán ahora las 
+probabilidades: 
+
+<<>>=
+x <- 3
+mu <- 6 
+ppois(x, lambda = mu, lower.tail=TRUE)
+@
+
+\item Entre 6 y 8 huracanes. $\mathrm{P}[6 \leq \mathrm{X} \leq 8]=\mathrm{P}[\mathrm{X} \leq 8]-\mathrm{P}[\mathrm{X} \leq 5]=\mathrm{F}(8)-\mathrm{F}(5)$
+Para calcular la probabilidad de que ocurran entre 6 y 8 huracanes, se pueden sumar las 
+probabilidades $\mathrm{P}(\mathrm{X}=6)+\mathrm{P}(\mathrm{X}=7)+\mathrm{P}(\mathrm{X}=8)$
+
+<<>>=
+#primera forma 
+sum(dpois(c(6,7,8),lambda = 6)) 
+@
+
+O restar las probabilidades acumuladas, con la opción Cola izquierda, $P(X \leq 8)-P(X \leq 5)$. Como 
+antes se realizan en primer lugar las probabilidades acumuladas y se restan los resultados 
+obtenidos:
+
+<<>>=
+F8 <- ppois(8, lambda = 6, lower.tail=TRUE) 
+F5 <- ppois(5,lambda = 6, lower.tail=TRUE) 
+F8 - F5
+@
+
+\item Represente gráficamente la función de probabilidad de la variable aleatoria X que mide el
+número de huracanes por año.
+
+<<fig=TRUE>>=
+n <- 30
+#genera 30 valores de una distribución de Poisson con lambda = 6
+x <- rpois(n, lambda=mu) 
+#calcula las probabilidades para cada valor generado 
+y <- dpois(x, lambda=mu) 
+#genera el gráfico de distribución 
+plot(x, y, xlab="x", ylab="Función de probalidad", 
+     main="Distribución de Poisson: lambda = 6", 
+type="h") 
+#une los puntos a las líneas 
+points(x, y, pch=21) 
+
+@
+
+\end{enumerate}
+
+\item \textbf{Ejemplo 3:}
+En un juego se disponen 15 globos llenos de agua, de los que 4 tienen premio. Los participantes en el 
+juego, con los ojos vendados, golpean los globos con un bate por orden hasta que cada uno consigue 
+romper 2. 
+
+\begin{enumerate}[a)]
+
+\item ¿Cuál es la probabilidad de que el primer participante consiga un premio?
+
+Para el primer participante la variable X="número de premios conseguidos entre 2 posibles" sigue una 
+distribución hipergeométrica de parámetros m=11, n=4, K=2. 
+
+<<>>=
+x <- 0:2
+m = 11
+n <- 4
+k=2 
+# x define el número de globos con premio 
+# se construye la distribución de frecuencias del número de premios 
+Tabla <- data.frame(Probabilidad=dhyper(x, m, n, k)) 
+rownames(Tabla) <- c("Ningún premio", "Solamente uno", "Dos premios") 
+Tabla
+@
+
+\item Si el primer participante ha conseguido sólo un premio, ¿cuál es la probabilidad de que el
+segundo participante consiga otro?
+Para el segundo participante la variable seguirá una hipergeométrica de parámetros m= 10, n= 3
+y k= 2.
+
+<<>>=
+x = 1
+m= 10
+n= 3
+k= 2 
+dhyper(x, m, n, k) 
+@
+
+\end{enumerate}
+
+\item \textbf{Ejemplo 4:}
+
+Un vendedor de alarmas de hogar tiene éxito en una casa de cada diez que visita. Calcula: 
+
+\begin{enumerate}[a)]
+
+\item La probabilidad de que en un día determinado consiga vender la primera alarma en la sexta
+casa que visita.
+Se define la variable X="número de casas que visita antes de conseguir vender la primera alarma", que 
+sigue una distribución Geométrica con Probabilidad de éxito= 0.1\\
+
+Habría que calcular la probabilidad de que tenga 5 fracasos antes del primer éxito, obteniendo de la 
+tabla la probabilidad $\mathrm{P}(\mathrm{X}=5)=0.059049$
+
+<<>>=
+# x define el número de intentos fallidos 
+x <- 0:5
+p=0.1 
+# creando la tabla de distribución de frecuencias del número de intentos fallidos 
+# antes de obtener la primera venta. 
+Tabla <- data.frame(Probabilidad=dgeom(x, prob=p))
+# nombrando las filas de la distribución de frecuencias 
+rownames(Tabla) <- c("Venta en el primer intento", "Venta en el segundo intento",
+"Venta en el 
+tercer intento", "Venta en el cuarto intento", "Venta en el quinto intento",
+"Venta en el sexto 
+intento") 
+Tabla
+@
+
+\item La probabilidad de que no venda ninguna después de siete viviendas visitadas.
+
+La variable $X=$ "número de alarmas vendidas en 7 viviendas" sigue una distribución Binomial con $n=7$ Ensayos binomiales y Probabilidad de éxito $\mathrm{p}=0.1$, luego en nuestro caso se tiene $\mathrm{P}(\mathrm{X}=0)=0.4782969$
+
+<<>>=
+x=0; n=7
+p=0.1 
+dbinom(x, n, p, log = FALSE) 
+@
+
+\item  Si se plantea vender tres alarmas, ¿cuál es la probabilidad de que consiga su objetivo en la
+octava vivienda que visita?
+
+Para abordar esta cuestión, se define la variable $Y=$ "número de casas que visita antes de conseguir vender la tercera alarma". Esta variable sigue una distribución Binomial Negativa de parámetros Número de éxitos= 3, Probabilidad de éxito $\mathrm{p}=0.1$, de donde: $P(Y=5)=0.01240029$
+
+<<>>=
+y <- 0:5
+r=3
+p <- 0.1 
+Tabla <- data.frame(Probabilidad=dnbinom(y, size=r, prob=p)) 
+rownames(Tabla) <- 0:5 
+Tabla
+@
+
+\end{enumerate}
+
+\end{itemize}
+
+\section{GENERACIÓN DE MUESTRAS ALEATORIAS DE LAS DISTRIBUCIONES}
+
+\begin{itemize}
+
+\item \textbf{Ejemplo 1:}
+
+Generar 100 números aleatorios de una distribución Binomial de parámetros n= 15 ensayos o pruebas 
+y una probabilidad de éxito de 0.25. 
+
+<<fig=TRUE>>=
+# Definir los parámetros apropiados 
+n <- 15
+p <- 0.25 
+# generar 100 números aleatorios binomiales 
+x = rbinom(100, n, p)
+x 
+# Histograma para la muestra aleatoria de tamaño 100 
+hist(x, main="X ~ Binomial(n=15, p=0.25)", xlab="X = Número de éxitos", ylab="masa de 
+probabilidad", probability=TRUE, col="blue") 
+# Graficar la función de probabilidad teórica, use la función points(), 
+# no debe cerrar el gráfico obtenido con la instrucción anterior 
+xvals=0:n; points(xvals, dbinom(xvals, n, p), type="h", lwd=3) 
+points(xvals, dbinom(xvals, n, p), type="p", lwd=3)
+@
+
+\item \textbf{Ejemplo 2:}
+
+Generar 100 números aleatorios de una distribución Poisson con 200000 ensayos o pruebas y una 
+probabilidad de éxito de 3/100000
+
+<<fig=TRUE>>=
+# Definir los parámetros apropiados 
+n <- 200000; p <- 3/100000; lambda=n*p 
+# generar 100 números aleatorios de la distribución 
+x = rpois(100, lambda); x 
+# Histograma para la muestra aleatoria de tamaño 100 
+hist(x, main=expression(paste("X ~ Poisson( ", lambda, " = 6 )")), 
+xlab="X = Número de eventos a 
+una tasa constante", ylab="masa de probabilidad", probability=TRUE, col="blue") 
+# Graficar la función de probabilidad teórica, use la función points() 
+xvals=0:n; points(xvals, dpois(xvals, lambda), type="h", lwd=3) 
+points(xvals, dpois(xvals, lambda), type="p", lwd=3)
+@
+
+
+\end{itemize}
+
+
+\end{document}

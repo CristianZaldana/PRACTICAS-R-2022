@@ -208,5 +208,60 @@ prob=TRUE, col="darkolivegreen3")
 ```
 
 Observe que el histograma tiene una forma muy acampanada entre n=15 y n=50, aunque justo en 
-n=50 parece todavía ser un poco sesgada
+n=50 parece todavía ser un poco sesgada.\\
+
+- **Ejercicios.**
+
+Simular el Teorema del Límite Central para una variable aleatoria que tiene distribución Poisson
+con lambda o media 4. Considerar 100 muestras aleatorias de tamaño 1, 10, 30, 50 valores de la
+distribución. Los gráficos deben estar en una misma ventana.
+
+```{r}
+simulPois <- function(mu, m=5, n=100) 
+{ 
+ vectMedias <<- numeric(0) 
+ MediasEstand <<- numeric(0) 
+ for (i in 1:m) 
+{ 
+ X = rpois(n,mu)
+# genera n valores de la distribución de Poisson. 
+ vectMedias[i] <<- mean(X) 
+ MediasEstand[i] <<- (vectMedias[i] - mu)/(mu/sqrt(n)) 
+ } 
+ } 
+
+par(mfrow=c(2,2)) 
+# para n=1 
+ mu=4 
+ m <- 100; n <- 1 
+ simulPois(mu, m, n) 
+ hist(MediasEstand, main="Medias Pois(4); n=1", xlab="m medias pois estándarizadas", 
+prob=TRUE, col="darkolivegreen3") 
+ xvals = seq(from=-3, to=3, by=0.01) 
+ points(xvals, dnorm(xvals, 0, 1), col = "red", type="l", lty=1, lwd=2) 
+# para n=10 
+ mu=4 
+ m <- 100; n <- 10 
+ simulPois(mu, m, n) 
+ hist(MediasEstand, main="Medias Pois(4); n=10", xlab="m medias pois estándarizadas", 
+prob=TRUE, col="darkolivegreen3") 
+ xvals = seq(from=-3, to=3, by=0.01) 
+ points(xvals, dnorm(xvals, 0, 1), col = "red", type="l", lty=1, lwd=2) 
+# para n=1 
+ mu=4 
+ m <- 100; n <- 30 
+ simulPois(mu, m, n) 
+ hist(MediasEstand, main="Medias Pois(4); n=30", xlab="m medias pois estándarizadas", 
+prob=TRUE, col="darkolivegreen3") 
+ xvals = seq(from=-3, to=3, by=0.01) 
+ points(xvals, dnorm(xvals, 0, 1), col = "red", type="l", lty=1, lwd=2) 
+# para n=1 
+ mu=4 
+ m <- 100; n <- 50
+ simulPois(mu, m, n) 
+ hist(MediasEstand, main="Medias Pois(4); n=50", xlab="m medias pois estándarizadas", 
+prob=TRUE, col="darkolivegreen3") 
+ xvals = seq(from=-3, to=3, by=0.01) 
+ points(xvals, dnorm(xvals, 0, 1), col = "red", type="l", lty=1, lwd=2) 
+```
 

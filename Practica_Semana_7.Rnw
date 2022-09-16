@@ -1,0 +1,577 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage {ragged2e}
+\usepackage{enumerate}
+\usepackage{booktabs}
+\usepackage[normalem]{ulem}
+\usepackage{array}
+
+\usepackage[Lenny]{fncychap}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage[labelfont=bf]{caption}
+\usepackage{longtable}
+\usepackage{float}
+\usepackage{fancyhdr}
+\usepackage{geometry}
+\geometry{left=2.5cm,right=2.5cm,bottom=3.5cm,top=2cm}
+\pagestyle{fancy}
+\rhead{\includegraphics[width=2cm, height=2cm]{logo1}}
+\lhead{}
+\chead{\textbf{UNIVERSIDAD DE EL SALVADOR \\ FACULTAD MULTIDISCIPLINARIA DE OCCIDENTE \\ DEPARTAMENTO DE MATEMÁTICA}}
+\lfoot{\textit{CICLO II 2022}}
+\rfoot{\textbf{PRÁCTICA SEMANA 7 (R)}}
+\setlength{\headheight}{60.50525pt}
+\renewcommand{\headrulewidth}{1pt}
+\renewcommand{\footrulewidth}{0.5pt}
+
+\begin{document}
+\thispagestyle{empty}
+\centering{\textbf{UNIVERSIDAD DE EL SALVADOR}}\\
+\vspace{1cm}
+\centering{\textbf{FACULTAD MULTIDISCIPLINARIA DE OCCIDENTE}}\\
+\vspace{1cm}
+\centering{\textbf{DEPARTAMENTO DE MATEMÁTICAS}}\\
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=6cm, height=6cm]{logo1.jpg}
+\end{center}
+\end{figure}
+\begin{center}
+\textbf{PRACTICA SEMANA 7 DE R}\\
+\vspace{1cm}
+\textbf{CARRERA:}\\
+\vspace{1cm}
+\textbf{LICENCIATURA EN ESTADÍSTICA}\\
+\vspace{1cm}
+\textbf{DOCENTE:}\\
+\vspace{1cm}
+\textbf{LIC. JAIME ISAAC PEÑA}\\
+\vspace{1cm}
+\textbf{PRESENTADO POR:}\\
+\vspace{1cm}
+\textbf{CRISTIAN ALBERTO ZALDAÑA ALVARADO}
+\end{center}
+\newpage
+\tableofcontents
+\newpage
+\listoftables
+\newpage
+\SweaveOpts{concordance=TRUE}
+
+\justify
+
+\section{Supuesto Práctico 1}
+
+Con el fin de estudiar el número medio de flexiones continuadas que pueden realizar los alumnos, un profesor de educación física somete a 75 de ellos, elegidos aleatoriamente, a una prueba. El número de flexiones realizado por cada alumno, así como su sexo y si realizan o no deporte se muestran en el fichero Flexiones.txt.\\  
+
+Se sabe que el número de flexiones se distribuye según una Normal de varianza poblacional 7.5. ¿Determinar el intervalo de confianza a un nivel de confianza del 95\% para el número medio de flexiones?  \\
+
+\textbf{Solución}\\
+
+En primer lugar debemos importar, en R, los datos que contienen el número de flexiones realizadas por cada alumno. Para ello, utilizamos la orden read.table
+
+<<>>=
+datos<-read.table("Flexiones.txt",header = TRUE)
+head(datos)
+@
+
+A continuación, introducimos en R los datos relativos al nivel de significación y la varianza poblacional de la variable que proporciona el enunciado.
+
+<<>>=
+alpha<-0.05
+varianza<-7.5
+@
+
+Calculamos por separado cada uno de los elementos restantes que necesitamos para obtener el intervalo de confianza.
+
+<<>>=
+n<-nrow(datos)
+media<-mean(datos$Flexiones)
+cuantil<-qnorm(1-alpha/2)
+@
+
+Por último, calculamos los extremos inferior y superior del intervalo de acuerdo a la expresión que se vio anteriormente:\\
+
+Por tanto:
+
+<<>>=
+lim_inf<-media - cuantil*sqrt(varianza)/sqrt(n)
+lim_inf
+lim_sup<-media + cuantil*sqrt(varianza)/sqrt(n)
+lim_sup
+@
+
+Por lo que el intervalo de confianza que buscamos es (49.48687,  50.72646).
+
+\section{Supuesto Práctico 2}
+
+Considerando nuevamente el conjunto de datos que se ha presentado en el supuesto práctico 1, relativo a las flexiones de los alumnos. Calcular un intervalo de confianza a un nivel de confianza del 98\% para el número medio de flexiones\\
+
+Suponer en este caso que el número de flexiones se distribuye según una distribución Normal de varianza desconocida.\\
+
+
+\textbf{Solución}\\
+
+Partiendo del conjunto de datos del Supuesto Práctico 1, el cual se había importado y almacenado en una variable de nombre datos, vamos a calcular el intervalo de confianza que nos piden. Para ello, basta con realizar la siguiente llamada a la función t.test
+
+<<>>=
+t.test(datos$Flexiones, conf.level = 0.98)
+@
+
+De toda la información que devuelve la función t.test, sólo nos interesa la relativa al intervalo de confianza. El resto hace referencia a los contrastes de hipótesis que, como hemos comentado, se estudiarán en la práctica 6.\\
+
+Por lo tanto, el intervalo de confianza para el número medio de flexiones a un nivel de confianza del 98\% es (48.46512, 51.74822).
+
+Resolvamos el mismo ejemplo pero cuando el enunciado nos muestra la media (50.11),  la cuasidesviación típica (5.98) y el tamaño muestral (75). Pero no proporciona los datos.\\
+
+\textbf{Solución}\\
+
+Al no disponer de un vector numérico con los valores de la variable de interés, para resolver el ejemplo recurriremos a utilizar la expresión del intervalo de confianza para este caso\\
+
+$$\left[\bar{X}-t_{1-\alpha/2}\frac{s}{\sqrt{n}},\bar{X}+t_{1-\alpha/2}\frac{s}{\sqrt{n}}\right]$$
+
+\begin{center}
+Expresión 9: Expresión del Intervalo de confianza (varianza desconocida)\\
+\end{center}
+
+En primer lugar, introducimos los datos del ejemplo
+
+<<>>=
+alpha<-0.02
+n<-75
+cuasi<-5.98
+media<-50.11
+@
+
+La función que devuelve resultados de los cuantiles de la t-Student es:\\
+\begin{center}
+\textbf {qt(p, df, ncp, lower.tail = T)}\\
+\end{center}
+
+donde:\\
+
+\begin{itemize}
+\item p: Vector de probabilidades
+\item df: Grados de libertad
+\item lower.tail: Parámetro booleano, si es TRUE (por defecto), las probabilidades son  $P[X \leq x]$, de lo contrario, $P [X > x]$.
+\end{itemize}
+
+<<>>=
+cuantil<-qt((1-alpha/2),8,lower.tail = T)
+lim_inf<-media-cuantil*cuasi/sqrt(n)
+lim_inf
+
+lim_sup<-media+cuantil*cuasi/sqrt(n)
+lim_sup
+@
+
+Por lo tanto, hay un 98\% de confianza de que el intervalo [48.10996 ,  52.11004] contenga el número medio de flexiones.
+
+\section{Supuesto Práctico 3}
+
+A partir del conjunto de datos relativo al número de flexiones y el sexo de los alumnos, obtener un intervalo de confianza al 95\% para la proporción de alumnos en la población. Del mismo modo, calcular un intervalo de confianza al 90\% para la proporción de alumnas.\\
+
+\textbf{Solución}\\
+
+Comenzaremos con el cálculo del intervalo de confianza para los chicos. Para realizar la llamada a la función prop.test necesitamos conocer, además del nivel de confianza, que viene indicado en el enunciado, el número de alumnos varones y el número total de estudiantes en la muestra. Para ello utilizamos la función, de R, table.
+
+<<>>=
+table(datos$Sexo)
+@
+
+De los 75 estudiantes que conforman la muestra, 43 son chicos. Por lo que la llamada a prop.test sería la siguiente:
+
+<<>>=
+prop.test(43,75)
+@
+
+Como el nivel de confianza para este intervalo es el 95\% no ha sido necesario incluir el argumento conf.level en la llamada a prop.test, puesto que este es el nivel de confianza por defecto.\\
+
+De nuevo, los resultados de la función incluyen mucha más información aparte de la relativa al intervalo de confianza. Por ahora, nos centraremos únicamente en esta última.\\
+
+Por lo que el intervalo de confianza, a un nivel de confianza del 95\% para la proporción de alumnos varones en la población es (0.4539, 0.6851).\\
+
+Repitamos el procedimiento para obtener ahora un intervalo de confianza para la proporción de chicas. En este caso, tenemos que tener en cuenta que el número de chicas en la muestra era 32.
+
+<<>>=
+prop.test(32,75,conf.level = 0.90)
+@
+
+Centrándonos en la parte de la salida que incluye el intervalo de confianza\\
+
+Podemos concluir que el intervalo de confianza, considerando un nivel de confianza del 90\%, para la proporción de chicas en la población es (0.3306, 0.5281).\\
+
+\textbf{Resolvamos este ejercicio utilizando la expresión del intervalo de confianza para la proporción}
+
+$$\left[p-z_{1-\alpha/2}\sqrt{\frac{p(1-p)}{n}},p+z_{1-\alpha/2}\sqrt{\frac{p(1-p)}{n}}\right]$$
+
+\begin{center}
+Expresión 14: Intervalo de confianza para la proporción
+\end{center}
+
+\textbf{Solución}\\
+
+Intervalo de confianza, a un nivel de confianza del 95\% para la proporción de alumnos varones en la población
+
+<<>>=
+alpha<-0.05
+n<-75
+p<-43/75
+cuantil<-qnorm(1-alpha/2)
+lim_inf<-p-cuantil*sqrt(p*(1-p))/sqrt(n)
+lim_inf
+
+lim_sup<-p+cuantil*sqrt(p*(1-p))/sqrt(n)
+lim_sup
+@
+
+
+Por lo que el intervalo de confianza, a un nivel de confianza del 95\% para la proporción de alumnos varones en la población es (0.4613985, 0.6852682).\\
+
+\textbf{Intervalo de confianza, a un nivel de confianza del 90\% para la proporción de alumnas en la población}\\
+
+\section{Supuesto Práctico 4}
+
+Continuando con los datos relativos a las flexiones realizadas por un grupo de estudiantes y asumiendo que el número de flexiones que realizan los chicos y las que realizan las chicas se distribuyen según sendas distribuciones normales con medias y varianzas desconocidas. Calcular un intervalo de confianza a un nivel de confianza del 95\% para el cociente de varianzas en ambas poblaciones. ¿Puede asumirse que ambas varianzas son iguales?
+
+\textbf{Solución}\\
+
+En primer lugar determinamos el intervalo de confianza para el cociente de varianzas, para ello utilizamos la función var.test. Lo primero que tenemos que hacer para aplicar la función var.test es separar en dos variables los datos relativos a las flexiones realizadas por los chicos y por las chicas.
+
+<<>>=
+Flexiones.chicos<-datos$Flexiones[datos$Sexo=="H"]
+Flexiones.chicas<-datos$Flexiones[datos$Sexo=="M"]
+
+Flexiones.chicas
+Flexiones.chicos
+
+
+@
+
+A continuación, utilizamos la función var.test tal y como se indica a continuación:
+
+<<>>=
+var.test(Flexiones.chicos,Flexiones.chicas)
+@
+
+Analizando la información relativa al intervalo de confianza que se incluye en la salida de var.test, podemos afirmar que el intervalo de confianza a un nivel de confianza del 95\% para el cociente de las varianzas de las dos distribuciones es (0.4415, 1.6765). Este intervalo de confianza contiene al valor 1, por lo que se puede suponer que las varianzas de las dos distribuciones son idénticas.\\
+
+Una vez se ha determinado la igualdad (o desigualdad) de las varianzas de ambas distribuciones, procedemos a calcular el intervalo de confianza para la diferencia de las medias propiamente dicho.
+
+\section{Supuesto Práctico 5}
+
+En vista de los resultados obtenidos en el supuesto práctico 4, y suponiendo que el número de flexiones que realizan los alumnos y las alumnas se distribuyen de acuerdo a variables normales de medias y varianzas desconocidas, obtener un intervalo de confianza al 95\% para la diferencia del número medio de flexiones entre chicos y chicas. ¿Puede suponerse que el número medio de flexiones que realizan los chicos y las chicas es igual?\\
+
+\textbf{Solución}\\
+
+Dado que en el supuesto práctico 4 se concluyó la igualdad de las varianzas del número de flexiones que hacen chicos y chicas, debemos establecer a TRUE el valor del parámetro var.equal cuando realicemos la llamada a la función t.test.
+
+<<>>=
+datos <- read.table("Flexiones.txt", header = TRUE)
+Flexiones.chicos<- datos$Flexiones[datos$Sexo == "H"]
+Flexiones.chicas<- datos$Flexiones[datos$Sexo == "M"]
+t.test(Flexiones.chicos, Flexiones.chicas, var.equal = TRUE)
+@
+
+
+Atendiendo la información sobre el intervalo de confianza que se incluye entre los resultados\\
+
+Se puede afirmar que el intervalo de confianza a un 95\% de confianza para la diferencia de las medias del número de flexiones que hacen chicos y chicas es (-2.8872, 2.7143). Como el 0 está dentro de este intervalo, se puede decir que ambas medias son idénticas.
+
+\section{Supuesto Práctico 6}
+
+Para estudiar los efectos de un programa de control de peso, el profesor de educación física selecciona aleatoriamente a 6 alumnos y se les toma nota de sus pesos antes y después de pasar por el programa.\\
+
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{ | c | c | c | c | c | c | c |}
+\hline Antes & 72.0 & 73.5 & 70.0 & 71.5 & 76.0 & 80.5 \\ \hline
+Despues & 73.0 & 74.5 & 74.0 & 74.5 & 75.0 & 82.0 \\ \hline
+\end{tabular}
+\caption{Datos del supuesto practico 6}
+\end{center}
+\end{table}
+
+Construir un intervalo de confianza a un 95\% de confianza para la diferencia de medias de los pesos antes y después de seguir el programa.\\
+
+\textbf{Solución}\\
+
+Como puede observarse, los datos vienen por parejas: peso antes y después, dos datos por individuo. Parece lógico que los datos se encuentren relacionados entre sí.\\
+
+En primer lugar, vamos a introducir los datos en R. Para ello definimos dos vectores
+
+
+<<>>=
+Antes<-c(72.0,73.5,70.0,71.5,76.0,80.5)
+Despues<-c(73.0,74.5,74.0,74.5,75.0,82.0)
+@
+
+A partir de estos datos, vamos a aplicar la función t.test, para obtener el intervalo de confianza que buscamos.
+
+<<>>=
+t.test(Antes,Despues,paired = TRUE)
+@
+
+Según los datos que se incluyen en la salida de la función, el intervalo de confianza al 95\% de confianza para la diferencia de las medias es (-3.4135, 0.2469). Como el 0 está contenido dentro de este intervalo, podemos afirmar que la diferencia entre los pesos medios de los alumnos antes y después de seguir el programa de control de peso es nula o, equivalentemente, que ambos pesos medios pueden suponerse iguales.
+
+\section{Supuesto Práctico 7}
+
+Retomando el conjunto de datos relativo a las flexiones que realizan un grupo de estudiantes, calcular un intervalo de confianza al 92\% para la diferencia entre la proporción de alumnos y de alumnas que practican deporte. ¿Puede considerarse que ambas proporciones son iguales?\\
+
+\textbf{Solución}\\
+
+En primer lugar, sino tenemos importado el fichero de datos, debemos importarlo. Para ello, utilizamos la orden read.table
+
+<<>>=
+datos <- read.table("Flexiones.txt", header = TRUE)
+@
+
+Una vez importado el fichero de datos, utilizamos el comando table para determinar cuántos chicos y cuantas chicas practican deporte.
+
+<<>>=
+table(datos$Sexo, datos$Deporte)
+@
+
+En total, 11 de los 43 y 19 de las 32 chicas muestreados practican deporte. Vamos a crear dos vectores con esta información:
+
+\begin{itemize}
+\item vectorDeport: Total de chicos y chicas que practican deporte
+\item vectorSexo: Total de chicos y chicas en la muestra.
+\end{itemize}
+
+<<>>=
+vector_Deporte<- c(11, 19)
+vector_Deporte
+vector_Sexo<- c(43, 32)
+vector_Sexo
+@
+
+Es muy importante que los valores se introduzcan en el mismo orden en los dos vectores. A continuación podemos utilizar la función prop.test con estos dos vectores como argumentos.
+
+<<>>=
+prop.test(vector_Deporte, vector_Sexo, conf.level = 0.92)
+@
+
+\section{Ejercicio Guiado 1 (Resuelto)}
+
+Un fabricante diseña un experimento para estimar la tensión de ruptura media de una fibra. Para ello, observa las tensiones de ruptura, en libras, de 16 hilos de dicha fibra seleccionados aleatoriamente. Las tensiones son 20.8, 20.6, 21.0, 20.9, 19.9, 20.2, 19.8, 19.6, 20.9, 21.1, 20.4, 20.6, 19.7, 19.6, 20.3, 20.7.\\
+
+Construir un intervalo de confianza al 98\% de confianza:\\
+
+\textbf{Solución:}\\
+
+En primer lugar, introducimos, en un vector, los datos de las 16 tensiones observadas y en segundo lugar introducimos el dato relativo al nivel de significación
+
+<<>>=
+tensiones<- c(20.8, 20.6, 21.0, 20.9, 19.9, 20.2, 19.8, 19.6, 20.9, 21.1,
+              20.4, 20.6, + 19.7, 19.6, 20.3, 20.7)
+alpha<- 0.02
+@
+
+\begin{enumerate}[a)]
+
+\item Si la tensión de ruptura se distribuye según una normal de desviación típica $\sigma = 0.45$ libras
+
+En este primer caso, y dado que conocemos la desviación típica poblacional de la distribución de la tensión de la fibra, debemos calcular manualmente los límites inferior y superior del intervalo.\\
+
+Así, calculamos la media muestral y el cuantil que intervienen en dicho intervalo.
+
+<<>>=
+n <- length(tensiones)
+media <- mean(tensiones)
+cuantil<- qnorm(1-alpha/2)
+@
+
+Introducimos el dato de la desviación típica
+
+<<>>=
+desv_tipica<- 0.45
+@
+
+A continuación calculamos el límite inferior y superior del intervalo pedido.
+
+<<>>=
+lim_inf<-  media - cuantil * desv_tipica / sqrt(n)
+lim_inf
+
+lim_sup<- media + cuantil * desv_tipica / sqrt(n)
+lim_sup
+@
+
+Por lo que el intervalo de confianza para la tensión media de la fibra que buscamos es (20.11954, 20.64296).
+
+\item Si la tensión de ruptura se distribuye según una normal de desviación típica desconocida.
+
+Hay que obtener un intervalo de confianza cuando la desviación típica no se conoce. Para ello, usamos la función t.test
+
+<<>>=
+t.test(tensiones, conf.level = 0.98)
+@
+
+En este segundo caso, el intervalo de confianza para la tensión media de la fibra, al 98\% de confianza, es (20.04092, 20.72158).
+
+\end{enumerate}
+
+\section{Ejercicio Guiado2 (Resuelto)}
+
+En una muestra de 40 alumnos, 25 de ellos están conformes con las decisiones que ha tomado el profesor con respecto a las calificaciones. Calcular un intervalo de confianza, a un 95\% de confianza para la proporción de alumnos conforme con el profesor.\\
+
+\textbf{Solución:}\\
+
+Para obtener un intervalo de confianza para la proporción poblacional, se utiliza la función prop.test. Disponemos tanto del número de alumnos que presentan la característica de interés (estar conforme con el profesor) como del número total de alumnos en la muestra, de manera que podemos realizar la llamada a la función tal y como sigue:
+
+<<>>=
+prop.test(25, 40)
+@
+
+El intervalo de confianza para la proporción poblacional de alumnos conformes al 95\% de confianza es (0.4580, 0.7682).
+
+\section{Ejercicio Guiado3 (Resuelto)}
+
+Una agencia estatal vigila la calidad del agua para la cría de peces. Esta agencia desea comparar la cantidad media de cierta sustancia tóxica en dos ríos contaminados por desperdicios industriales. Se seleccionaron 11 muestras en un río y 8 muestras en el otro. Los resultados de los análisis fueron:
+
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{ | c | c | c | c | c | c | c | c | c | c | c | c |}
+\hline Rio1 & 10 & 10 & 12 & 13 & 9 & 8 & 12 & 12 & 10 & 14 & 8 \\ \hline
+Rio2 & 11 & 8 & 9 & 7 & 10 & 8 & 8 & 10 & "" & "" & "" \\ \hline
+\end{tabular}
+\caption{Datos del ejercicio guiado 3}
+\end{center}
+\end{table}
+
+Si las dos poblaciones son normales e independientes, calcular un intervalo de confianza con nivel de confianza del 90\% para la diferencia de las medias poblacionales de cantidad de sustancia tóxica.\\
+
+\textbf{Solución:}\\
+
+En primer lugar introducimos los datos en R:
+
+<<>>=
+Rio1 <- c(10, 10, 12, 13, 9, 8, 12, 12, 10, 14, 8)
+Rio2 <- c(11, 8, 9, 7, 10, 8, 8, 10)
+@
+
+Aunque el enunciado nos pide calcular un intervalo de confianza para la diferencia de la cantidad media de sustancia tóxica en ambos ríos, primero debemos obtener un intervalo de confianza para el cociente de las varianzas de la sustancia en ambos ríos, para saber si estas varianzas pueden asumirse iguales o no. Para ello, empleamos la función var.test.
+
+<<>>=
+var.test(Rio1, Rio2, conf.level = 0.90)
+@
+
+Según los resultados de var.test, el intervalo de confianza al 90\% de confianza para el cociente de las varianzas de la variable en ambos ríos es (0.6007, 6.8498),  que contiene al 1. Por tanto, podemos asumir que ambas varianzas son iguales en ambos ríos.\\
+
+Por lo tanto, tenemos que obtener un intervalo de confianza para la diferencia de medias de dos poblaciones cuando las varianzas de ambas poblaciones son iguales. Para ello, utilizamos la función t.test.
+
+<<>>=
+t.test(Rio1, Rio2, var.equal = TRUE, conf.level = 0.90)
+@
+
+El intervalo de confianza, al 90\% de confianza, para la diferencia de medias de sustancia tóxica en ambos ríos es (0.4242, 3.2802), que no contiene al 0, por lo que podemos concluir que la cantidad media de tóxico en ambos ríos no es la misma.
+
+\section{Ejercicio Guiado 4 (Resuelto)}
+
+Una empresa farmacéutica está interesada en la investigación preliminar de un nuevo medicamento que parece tener propiedades reductoras del colesterol en la sangre. A tal fin se toma una muestra al azar de 6 personas, y se determina el contenido en colesterol antes y después del tratamiento. Los resultados han sido los siguientes:
+
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{ | c | c | c | c | c | c | c |}
+\hline Antes & 217 & 252 & 229 & 200 & 209 & 213 \\ \hline
+Despues & 209 & 241 & 230 & 208 & 206 & 211 \\ \hline
+\end{tabular}
+\caption{Datos del ejercicio guiado 4}
+\end{center}
+\end{table}
+
+Calcular un intervalo de confianza, al 96\% de confianza para la diferencia del nivel de colesterol medio antes y después del tratamiento.\\
+
+\textbf{Solución:}\\
+
+En primer lugar introducimos los datos en R.
+
+<<>>=
+Antes <- c(217, 252, 229, 200, 209, 213)
+Despues<- c(209, 241, 230, 208, 206, 211)
+@
+
+Estos datos son un claro ejemplo de datos pareados, ya que a los mismos individuos se les ha medido el nivel de colesterol en sangre antes y después del tratamiento. Por lo que tenemos que obtener un intervalo de confianza para la diferencia de medias de dos poblaciones normales relacionadas. Para ello, realizamos la llamada a la función t.test, sin olvidar indicar mediante el parámetro paired la relación que existe entre los conjuntos de datos.
+
+<<>>=
+t.test(Antes, Despues, paired = TRUE, conf.level = 0.96)
+@
+
+El intervalo de confianza, al 96\% de confianza, para la diferencia del colesterol medio antes y después del tratamiento es (-5.0573, 10.0573). Este intervalo contiene al 0, por lo que podemos concluir que los niveles medios de colesterol antes y después del tratamiento pueden considerarse iguales, poniendo así en duda la efectividad de dicho tratamiento.
+
+\section{Ejercicio Guiado 5 (Resuelto)}
+
+Una determinada empresa quiere saber si su nuevo producto tendrá más aceptación en la población adulta o entre los jóvenes. Para ello, considera una muestra aleatoria de 400 adultos y 600 jóvenes, observando que sólo a 100 adultos y 300 jóvenes les había gustado su producto. Construir un intervalo de confianza al 99\% de confianza para la diferencia de proporciones de adultos y jóvenes a los que les gusta el producto. ¿Puede suponerse que el producto gusta por igual en adultos y jóvenes?\\
+
+\textbf{Solución:}\\
+
+En este caso debemos utilizar la función prop.test para calcular el intervalo de confianza para la diferencia de proporciones. Pero primero, debemos crear un vector que indique el número de adultos y jóvenes a los que les gusta el producto así como un segundo vector con el número total de adultos y jóvenes encuestados.
+
+<<>>=
+Adul_Jov_Gusta_Producto<- c(100, 300)
+Adul_Jov_Total<- c(400, 600)
+@
+
+Una vez hecho esto, llamamos a la función prop.test, indicando el nivel de confianza adecuado.
+
+<<>>=
+prop.test(Adul_Jov_Gusta_Producto, Adul_Jov_Total, conf.level = 0.99)
+@
+
+Según los resultados que proporciona prop.test, el intervalo de confianza para la diferencia de proporciones que buscamos es (-0.3287, -0.1712), el cual deja fuera al 0, por lo que se puede afirmar que el producto no gusta por igual entre adultos y jóvenes.
+
+\section{Ejercicio Guiado 6 (Resuelto)}
+
+En una experiencia genética se extraen 20 moscas de una caja experimental y se mide la longitud del ala de cada una. Se obtuvieron los siguientes valores:
+
+\begin{center}
+\textbf{93, 90, 97, 90, 93, 91, 96, 94, 91, 91, 88, 93, 95, 91, 89, 92, 87, 88, 90, 86}
+\end{center}
+
+Suponiendo que la longitud del ala sigue una distribución Normal.  Construir un intervalo de confianza al 99\% de confianza para:\\
+
+\textbf{Solucion}\\
+
+En primer lugar introducimos, en un vector, los datos de las 20 concentraciones observadas y en segundo lugar introducimos el dato relativo al nivel de significación
+
+<<>>=
+longitud<- c(93, 90, 97, 90, 93, 91, 96, 94, 91, 91, 88, 93, 95, 91, 89, 92, 87, 88, 90, 86)
+
+alpha<- 0.01
+
+@
+
+
+\begin{enumerate}[a)]
+
+\item Construir un intervalo de confianza al 99\% de confianza para la media $\mu$
+
+Hay que obtener un intervalo de confianza cuando la varianza poblacional es desconocida. Para ello, usamos la función t.test
+
+<<>>=
+t.test(longitud)
+@
+
+El intervalo de confianza para la longitud media de las alas al 99\% de confianza, es (89.87604,  92.62396).
+
+\item Construir un intervalo de confianza al 99\% de confianza para la varianza $\sigma^2$.
+
+R no incluye una función específica para el cálculo de intervalos de confianza en este tipo de situaciones. Por lo tanto calcularemos el intervalo de la siguiente forma
+
+<<>>=
+n <- length(longitud)
+varianza <- var(longitud)
+L1 <- (n - 1) * varianza / qchisq(1-alpha / 2,n - 1)
+L2 <- (n - 1) * varianza / qchisq(alpha /2,n - 1)
+IC <- c(L1,L2)
+IC
+@
+
+El intervalo pedido es: (4.244179, 23.926166)
+
+\end{enumerate}
+\end{document}
+
+

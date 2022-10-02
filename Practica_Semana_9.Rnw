@@ -1,0 +1,1049 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage {ragged2e}
+\usepackage{enumerate}
+\usepackage{booktabs}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage[normalem]{ulem}
+\usepackage{array}
+\usepackage{amssymb, amsmath}
+
+\usepackage[Lenny]{fncychap}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage[labelfont=bf]{caption}
+\usepackage{longtable}
+\usepackage{float}
+\usepackage{fancyhdr}
+\usepackage{geometry}
+\geometry{left=2.5cm,right=2.5cm,bottom=3.5cm,top=2cm}
+\spanishdecimal{.}
+
+
+\pagestyle{fancy}
+\rhead{\includegraphics[width=2cm, height=2cm]{logo1}}
+\lhead{}
+\chead{\textbf{UNIVERSIDAD DE EL SALVADOR \\ FACULTAD MULTIDISCIPLINARIA DE OCCIDENTE \\ DEPARTAMENTO DE MATEMÁTICA}}
+\lfoot{\textit{CICLO II 2022}}
+\rfoot{\textbf{PRÁCTICA SEMANA 9 (R)}}
+\setlength{\headheight}{60.50525pt}
+\renewcommand{\headrulewidth}{1pt}
+\renewcommand{\footrulewidth}{0.5pt}
+
+\begin{document}
+\thispagestyle{empty}
+\centering{\textbf{UNIVERSIDAD DE EL SALVADOR}}\\
+\vspace{1cm}
+\centering{\textbf{FACULTAD MULTIDISCIPLINARIA DE OCCIDENTE}}\\
+\vspace{1cm}
+\centering{\textbf{DEPARTAMENTO DE MATEMÁTICAS}}\\
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=6cm, height=6cm]{logo1.jpg}
+\end{center}
+\end{figure}
+\begin{center}
+\textbf{PRACTICA SEMANA 9 DE R}\\
+\vspace{1cm}
+\textbf{CARRERA:}\\
+\vspace{1cm}
+\textbf{LICENCIATURA EN ESTADÍSTICA}\\
+\vspace{1cm}
+\textbf{DOCENTE:}\\
+\vspace{1cm}
+\textbf{LIC. JAIME ISAAC PEÑA}\\
+\vspace{1cm}
+\textbf{PRESENTADO POR:}\\
+\vspace{1cm}
+\textbf{CRISTIAN ALBERTO ZALDAÑA ALVARADO}
+\end{center}
+\newpage
+\tableofcontents
+\newpage
+\listoftables
+\newpage
+\listoffigures
+\newpage
+\SweaveOpts{concordance=TRUE}
+
+\justify
+
+\section{Diseño Completamente Aleatorio con efectos fijos (Diseño unifactorial de efectos fijos)}
+\subsection{Supuesto práctico 1}
+
+La contaminación es uno de los problemas ambientales más importantes que afectan a nuestro mundo. En las grandes ciudades, la contaminación del aire se debe a los escapes de gases de los motores de explosión, a los aparatos domésticos de la calefacción, a las industrias,… El aire contaminado nos afecta en nuestro vivir diario, manifestándose de diferentes formas en nuestro organismo. Con objeto de comprobar la contaminación del aire en una determinada ciudad, se ha realizado un estudio en el que se han analizado las concentraciones de monóxido de carbono (CO) durante cinco días de la semana (lunes, martes, miércoles, jueves y viernes).
+
+
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{|l|llllllll|}
+\hline
+\begin{tabular}[c]{@{}l@{}}Días de la\\      semana\end{tabular} & \multicolumn{8}{l|}{Concentraciones   de monóxido de carbono}                                                                                                                                    \\ \hline
+Lunes                                                            & \multicolumn{1}{l|}{420} & \multicolumn{1}{l|}{390} & \multicolumn{1}{l|}{480} & \multicolumn{1}{l|}{430} & \multicolumn{1}{l|}{440} & \multicolumn{1}{l|}{324} & \multicolumn{1}{l|}{450} & 460 \\ \hline
+Martes                                                           & \multicolumn{1}{l|}{450} & \multicolumn{1}{l|}{390} & \multicolumn{1}{l|}{430} & \multicolumn{1}{l|}{521} & \multicolumn{1}{l|}{320} & \multicolumn{1}{l|}{360} & \multicolumn{1}{l|}{342} & 423 \\ \hline
+Miércoles                                                        & \multicolumn{1}{l|}{355} & \multicolumn{1}{l|}{462} & \multicolumn{1}{l|}{286} & \multicolumn{1}{l|}{238} & \multicolumn{1}{l|}{344} & \multicolumn{1}{l|}{423} & \multicolumn{1}{l|}{123} & 196 \\ \hline
+Jueves                                                           & \multicolumn{1}{l|}{321} & \multicolumn{1}{l|}{254} & \multicolumn{1}{l|}{412} & \multicolumn{1}{l|}{368} & \multicolumn{1}{l|}{340} & \multicolumn{1}{l|}{258} & \multicolumn{1}{l|}{433} & 489 \\ \hline
+Vlemes                                                           & \multicolumn{1}{l|}{238} & \multicolumn{1}{l|}{255} & \multicolumn{1}{l|}{366} & \multicolumn{1}{l|}{389} & \multicolumn{1}{l|}{198} & \multicolumn{1}{l|}{256} & \multicolumn{1}{l|}{248} & 324 \\ \hline
+\end{tabular}
+\caption{Tabla de datos del supuesto práctico 1}
+\end{center}
+\end{table}
+
+\textbf{En el Supuesto práctico 1:}
+
+\begin{itemize}
+\item Variable respuesta: Concentración de CO.
+\item Factor: Día de la semana que tiene cinco niveles. Es un factor de efectos fijos ya que viene decidido qué niveles concretos se van a utilizar (5 días de la semana).
+\item Modelo equilibrado: Los niveles de los factores tienen el mismo número de elementos (8 elementos).
+\item Tamaño del experimento: Número total de observaciones, en este caso 40 unidades experimentales.
+\end{itemize}
+
+El problema planteado se modeliza a través de un diseño unifactorial totalmente aleatorizado de efectos fijos equilibrado.\\
+\\
+Para realizar este supuesto en R debemos introducir primero los datos de forma correcta. Podemos realizarlo directamente en R de forma manual o introducirlos previamente en un archivo de texto o Excel y leerlos en R.\\
+\\
+En este caso lo hacemos en un archivo de texto:
+
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+Concentracion & Dia       \\ \hline
+420           & Lunes     \\ \hline
+390           & Lunes     \\ \hline
+480           & Lunes     \\ \hline
+430           & Lunes     \\ \hline
+440           & Lunes     \\ \hline
+324           & Lunes     \\ \hline
+450           & Lunes     \\ \hline
+460           & Lunes     \\ \hline
+450           & Martes    \\ \hline
+390           & Martes    \\ \hline
+430           & Martes    \\ \hline
+521           & Martes    \\ \hline
+320           & Martes    \\ \hline
+360           & Martes    \\ \hline
+342           & Martes    \\ \hline
+423           & Martes    \\ \hline
+355           & Miercoles \\ \hline
+462           & Miercoles \\ \hline
+286           & Miercoles \\ \hline
+238           & Miercoles \\ \hline
+344           & Miercoles \\ \hline
+423           & Miercoles \\ \hline
+123           & Miercoles \\ \hline
+196           & Miercoles \\ \hline
+321           & Jueves    \\ \hline
+254           & Jueves    \\ \hline
+412           & Jueves    \\ \hline
+368           & Jueves    \\ \hline
+340           & Jueves    \\ \hline
+258           & Jueves    \\ \hline
+433           & Jueves    \\ \hline
+489           & Jueves    \\ \hline
+238           & Viernes   \\ \hline
+255           & Viernes   \\ \hline
+366           & Viernes   \\ \hline
+389           & Viernes   \\ \hline
+198           & Viernes   \\ \hline
+256           & Viernes   \\ \hline
+248           & Viernes   \\ \hline
+324           & Viernes   \\ \hline
+\end{tabular}
+\caption{Tabla de datos del supuesto práctico 1}
+\end{center}
+\end{table}
+
+En primer lugar describimos los cinco grupos que tenemos que comparar, los cinco días de la semana, la variable respuesta es la concentración de CO en estos días de la semana. Cada día de la semana tiene ocho unidades, en total tenemos 40 observaciones. La hipótesis nula es que el promedio de las concentraciones es igual el día lunes que el martes, que el miércoles… Es decir, no hay diferencias en las concentraciones con respecto a los días y la alternativa es que las concentraciones de CO son diferentes al menos en dos días.\\
+
+Tenemos en cuenta que para que el ejercicio esté realizado de forma correcta los datos tienen que estar introducidos tal y como vienen en Figura 1, es decir,  las observaciones en una sola columna y a continuación especificado su tratamiento y su bloque correspondiente.\\
+
+Para cargar los datos utilizamos la función read.table indicando el nombre del archivo (que debe de estar en el directorio de trabajo) e indicando además que tiene cabecera.
+
+<<>>=
+contaminacion <- read.table("supuesto1.txt", header = TRUE)
+head(contaminacion)
+@
+
+Se puede realizar de dos formas:\\
+\\
+Transformar la variable referente a los niveles del factor fijo como factor
+
+<<>>=
+contaminacion$dia<-factor(contaminacion$Dia)
+contaminacion$dia
+@
+
+Para calcular la tabla ANOVA primero hacemos uso de la función “aov” de la siguiente forma:
+
+<<>>=
+mod <- aov(Concentracion ~ Dia, data = contaminacion)
+@
+
+donde:
+\begin{itemize}
+\item Concentracion = nombre de la columna de las observaciones.
+\item Dia = nombre de la columna en la que están representados los tratamientos.
+\item data= data.frame en el que están guardados los datos.
+\end{itemize}
+
+<<>>=
+mod <- aov(Concentracion ~ Dia, data = contaminacion)
+mod
+@
+
+Se puede mostrar un resumen de los resultados con la función “summary” (verdadera tabla ANOVA)
+
+<<>>=
+summary(mod) # TABLA ANOVA
+@
+
+Si el valor de F es mayor que uno quiere decir que hay un efecto positivo del factor día. Se observa que el P-valor (Sig.) tiene un valor de 0.003524, que es menor que el nivel de significación 0.05. Por lo tanto, hemos comprobado estadísticamente que estos cinco grupos son distintos. Es decir, existen diferencias significativas en las concentraciones medias de monóxido de carbono entre los cinco días de la semana. Por lo tanto no se puede rechazar la hipótesis alternativa que dice que al menos dos grupos son diferentes, pero ¿Cuáles son esos grupos? ¿Los cinco grupos son distintos o sólo alguno de ellos? Pregunta que resolveremos más adelante mediante los contrastes de comparaciones múltiples.\\
+\\
+En la expresión del comando “aov” indicar el factor
+
+<<>>=
+mod1 <- aov(Concentracion ~ factor (Dia), data = contaminacion)
+mod1
+summary(mod1)
+@
+
+También se puede utilizar el comando “anova” y no es necesario el comando “summary”
+
+<<>>=
+mod2 <- anova (lm (Concentracion ~ factor (Dia), data = contaminacion))
+mod2
+@
+
+Los datos vienen dados de la siguiente forma:\\
+\\
+Lunes: 420, 390, 480, 430, 440, 324, 450, 460\\
+\\
+Martes: 450, 390, 430, 521, 320, 360, 342, 423\\
+\\
+Miércoles: 355, 462, 286, 238, 344, 423, 123, 196\\
+\\
+Jueves: 321, 254, 412, 368, 340, 258, 433, 489\\
+\\
+Viernes: 238, 255, 366, 389, 198, 256, 248, 324\\
+\\
+Se crean cinco vectores, cada uno de ellos representando la contaminación con un tratamiento.
+
+<<>>=
+Lu= c(420, 390, 480, 430, 440, 324, 450, 460)
+Ma = c(450, 390, 430, 521, 320, 360, 342, 423)
+Mi= c(355, 462, 286, 238, 344, 423, 123, 196)
+Ju=c(321, 254, 412, 368, 340, 258, 433, 489)
+Vi= c(238, 255, 366, 389, 198, 256, 248, 324)
+Lu
+Ma
+Mi
+Ju
+Vi
+@
+
+Acontinuación creamos un data.frame para poder resolver el ANOVA
+
+<<>>=
+datos = data.frame(Lu, Ma, Mi, Ju,Vi)
+datos
+@
+
+De esta forma hemos creado una nueva base de datos que hemos llamado  “datos“. Para resolver el ANOVA tenemos  primero que apilar las columnas con el comando “stack”
+
+<<>>=
+datos1 = stack(datos)
+datos1
+@
+
+Resolvemos el ANOVA como en el caso anterior
+
+<<>>=
+anova(lm(values ~ ind, data = datos1))
+@
+
+Los datos se muestren en un solo vector que tiene todos los datos de la contaminación tanto si se ha medido el lunes, el martes, el miércoles, el jueves o el viernes
+
+<<>>=
+contaminacion = c(Lu, Ma, Mi, Ju, Vi)
+contaminacion
+@
+
+Este vector esta formado por los 40 datos que podemos comprobarlo con el comando length
+
+<<>>=
+length(contaminacion)
+@
+
+Para realizar el ANOVA, ya tenemos los datos de la variable respuesta y a continuación tenemos que crear el factor tratamiento, para ello vamos a utilizar la función generador de niveles, gl,  y le decimos que nos genere 5 niveles que son los cinco tratamientos, cada uno repetido 8 veves con un total de 40 datos y para identificar que nivel es cada uno, creamos las etiquetas L, M, Mi, J y V
+
+<<>>=
+trat = gl(5,8,40, labels= c ("L", "M", "Mi", "j", "V"))
+trat
+anova(lm(contaminacion~trat))
+@
+
+El modelo que hemos propuesto hay que validarlo, para ello hay que comprobar si se verifican las hipótesis básicas del modelo, es decir, si las perturbaciones son variables aleatorias independientes con distribución normal de media 0 y varianza constante (homocedasticidad).
+
+\subsubsection{Hipótesis de normalidad}
+
+En primer lugar, analizamos la normalidad de las concentraciones y continuamos con el análisis de la normalidad de los residuos.\\
+\\
+Para analizar la normalidad de las concentraciones utilizamos el test de Shapiro-Wilks
+
+<<>>=
+shapiro.test(mod$residuals)
+@
+
+Observamos el contraste de Shapiro-Wilk que es adecuado cuando las muestras son pequeñas (n < 50) y es una alternativa más potente que el test de Kolmogorov-Smirnov. El p-valor es mayor que el nivel de significación del 5\%, concluyendo que las muestras de las concentraciones se distribuyen de forma normal en cada día de la semana.\\
+\\
+Podemos verlo también gráficamente con la orden “qqnorm”
+
+<<>>=
+qqnorm (mod$residuals)
+@
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics{qqplot.png}
+\caption{Gráfico Q-Qplot}
+\end{center}
+\end{figure}
+
+Podemos apreciar en este gráfico que los puntos aparecen próximos a la línea diagonal. Esta gráfica no muestra una desviación marcada de la normalidad.
+
+\subsubsection{Hipótesis de homocedasticidad}
+
+Para comprobar la hipótesis de igualdad entre las varianzas del factor utilizamos el Test de Barlett.
+
+<<>>=
+contaminacion <- read.table("supuesto1.txt", header = TRUE)
+contaminacion
+bartlett.test(contaminacion$Concentracion, contaminacion$Dia)
+@
+
+El p-valor es del 0.2402 que al ser mayor del nivel significación usual del 5\% no podemos rechazar la hipótesis de igualdad de varianzas, es decir, se acepta la igualdad de varianzas en el factor.
+
+\subsubsection{Hipótesis de independencia}
+
+Para comprobar que se satisface el supuesto de independencia entre los residuos analizamos el gráfico de los residuos frente a los valores pronosticados o predichos por el modelo. El empleo de este gráfico es útil puesto que la presencia de alguna tendencia en el mismo puede ser indicio de una violación de dicha hipótesis. En R obtenemos varios gráficos a la vez que están incluidos en la estimación del modelo.\\
+\\
+Para verlos de forma correcta hacemos uso de las siguientes órdenes:
+
+<<>>=
+layout(matrix(c(1,2,3,4),2,2)) # para que salgan en la misma pantalla
+plot(mod)
+@
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics{Rplot1.png}
+\caption{ Estudio gráfico de la hipótesis de independencia}
+\end{center}
+\end{figure}
+
+En la Figura 5 se muestran cuatro gráficos, en el primero de ellos que se representan los residuos en el eje de ordenadas y los valores pronosticados en el eje de abscisas. No observamos, en dicho gráfico, ninguna tendencia sistemática que haga sospechar del incumplimiento de la suposición de independencia.\\
+
+Anteriormente, hemos comprobado estadísticamente que estos cinco grupos son distintos. Es decir no se puede rechazar la hipótesis alternativa que dice que al menos dos grupos son diferentes, pero ¿Cuáles son esos grupos? ¿Los cinco grupos son distintos o sólo alguno de ellos? Pregunta que resolveremos más adelante mediante los contrastes de comparaciones múltiples.
+
+\subsubsection{Comparaciones múltiples}
+
+Para saber entre que parejas de días las diferencias entre concentraciones medias de CO  son significativas aplicamos la prueba Post-hoc de Tukey
+
+<<>>=
+mod.tukey<- TukeyHSD(mod, ordered = TRUE)
+mod.tukey
+@
+
+Esta salida nos muestra los intervalos de confianza simultáneos construidos por el método de Tukey. En la tabla se muestra un resumen de las comparaciones de cada tratamiento con los restantes. Es decir, aparecen comparadas dos a dos las cinco medias de los tratamientos.\\
+\\
+En esta tabla, las columnas:
+
+\begin{itemize}
+\item diff: muestra las medias de cada par
+\item p adj: muestra los p-valores de los contrastes, que permiten conocer si la diferencia entre cada pareja de medias es significativa al nivel de significación considerado (en este caso 0.05)
+\item lwr y upr: proporcionan los intervalos de confianza al 95\% para cada diferencia.
+\end{itemize}
+
+Así por ejemplo, si comparamos la concentración media de CO del Lunes con el Martes, tenemos una diferencia entre ambas medias de 19.750, un p-valor (Sig.) de 0.9868896 no significativo puesto que la concentración de CO no difiere significativamente el lunes del martes y un intervalo de confianza con un límite inferior negativo y un límite superior positivo y por lo tanto contiene al cero de lo que también deducimos que no hay diferencias significativas entre los dos grupos que se comparan o que ambos grupos son homogéneos.\\
+
+En cambio si observamos el grupo formado por el Lunes y el Miércoles, vemos que ambos extremos del intervalo son del mismo signo y el p-valor es significativo deduciendo que si hay diferencias significativas entre ambos. Las otras comparaciones se interpretan de forma análoga.\\
+
+Por lo tanto la tabla se interpreta observando los valores de p adj menores que el 5\%, o si el intervalo de confianza contiene al cero.\\
+
+Concluimos que se detectan diferencias significativas en las concentraciones de CO entre lunes y miércoles; lunes y viernes; martes y viernes.
+
+\newpage
+
+\section{Diseño Unifactorial de efectos aleatorios}
+
+En el modelo de efectos aleatorios, los niveles del factor son una muestra aleatoria de una población de niveles. Este modelo surge ante la necesidad de estudiar un factor que presenta un número elevado de posibles niveles, que en algunas ocasiones puede ser infinito. En este modelo las conclusiones obtenidas se generalizan a toda la población de niveles del factor, ya que los niveles empleados en el experimento fueron seleccionados al azar. El estudio de este diseño lo vamos a realizar mediante el siguiente supuesto práctico.
+
+\subsection{Supuesto práctico 2}
+
+Los medios de cultivo bacteriológico en los laboratorios de los hospitales proceden de diversos fabricantes. Se sospecha que la calidad de estos medios de cultivo varía de un fabricante a otro. Para comprobar esta teoría, se hace una lista de fabricantes de un medio de cultivo concreto, se seleccionan aleatoriamente los nombres de cinco de los que aparecen en la lista y se comparan las muestras de los instrumentos procedentes de éstos. La comprobación se realiza colocando sobre una placa dos dosis, en gotas, de una suspensión medida de un microorganismo clásico, Escherichia coli, dejando al cultivo crecer durante veinticuatro horas, y determinando después el número de colonias (en millares) del microorganismo que aparecen al final del período. Se quiere comprobar si la calidad del instrumental difiere entre fabricantes.
+
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{|l|lllllllll|}
+\hline
+\textbf{Fabricantes} & \multicolumn{9}{l|}{\textbf{Número de colonias (en   millares)}}                                                                                                                                                            \\ \hline
+Fabricantel          & \multicolumn{1}{l|}{120} & \multicolumn{1}{l|}{240} & \multicolumn{1}{l|}{300} & \multicolumn{1}{l|}{360} & \multicolumn{1}{l|}{240} & \multicolumn{1}{l|}{180} & \multicolumn{1}{l|}{144} & \multicolumn{1}{l|}{300} & 240 \\ \hline
+Fabricante2          & \multicolumn{1}{l|}{240} & \multicolumn{1}{l|}{360} & \multicolumn{1}{l|}{180} & \multicolumn{1}{l|}{180} & \multicolumn{1}{l|}{300} & \multicolumn{1}{l|}{240} & \multicolumn{1}{l|}{360} & \multicolumn{1}{l|}{360} & 360 \\ \hline
+Fabricante3          & \multicolumn{1}{l|}{240} & \multicolumn{1}{l|}{270} & \multicolumn{1}{l|}{300} & \multicolumn{1}{l|}{360} & \multicolumn{1}{l|}{360} & \multicolumn{1}{l|}{300} & \multicolumn{1}{l|}{360} & \multicolumn{1}{l|}{360} & 300 \\ \hline
+Fabricanle4          & \multicolumn{1}{l|}{300} & \multicolumn{1}{l|}{240} & \multicolumn{1}{l|}{300} & \multicolumn{1}{l|}{360} & \multicolumn{1}{l|}{360} & \multicolumn{1}{l|}{360} & \multicolumn{1}{l|}{360} & \multicolumn{1}{l|}{360} & 300 \\ \hline
+Fabricanle5          & \multicolumn{1}{l|}{300} & \multicolumn{1}{l|}{360} & \multicolumn{1}{l|}{240} & \multicolumn{1}{l|}{360} & \multicolumn{1}{l|}{360} & \multicolumn{1}{l|}{360} & \multicolumn{1}{l|}{360} & \multicolumn{1}{l|}{300} & 360 \\ \hline
+\end{tabular}
+\caption{Tabla de datos del supuesto práctico 2}
+\end{center}
+\end{table}
+
+Para realizar este supuesto en R debemos introducir primero los datos de forma correcta. Podemos introducir los datos directamente en R de forma manual o introducirlos previamente en un archivo de texto o Excel y leerlos en R.\\
+\\
+Se quiere comprobar si la calidad del instrumental difiere entre fabricantes.\\
+
+Tenemos en cuenta que para que el ejercicio esté realizado de forma correcta los datos tienen que estar introducidos tal y como vienen en la imagen, es decir, las observaciones en una sola columna y a continuación especificado su tratamiento y su bloque correspondiente.\\
+
+Para cargar los datos utilizamos la función read.table indicando el nombre del archivo (que debe de estar en el directorio de trabajo) e indicando además que tiene cabecera.
+
+<<>>=
+bacterias<-read.table("supuesto2.txt", header = TRUE)
+head(bacterias)
+@
+
+Debemos transformar la variable referente a los niveles del factor fijo como factor para poder hacer los cálculos de forma adecuada
+
+<<>>=
+bacterias$Fabricante<- factor(bacterias$Fabricante)
+bacterias$Fabricante
+@
+
+Para calcular la tabla ANOVA primero hacemos uso de la función “aov” de la siguiente forma:
+
+<<>>=
+mod <- aov(Calidad ~ Fabricante, data = bacterias)
+@
+
+donde:
+
+\begin{itemize}
+\item Calidad = nombre de la columna de las observaciones.
+\item Fabricante = nombre de la columna en la que están representados los tratamientos.
+\item data = data.frame en el que están guardados los datos.
+\end{itemize}
+
+<<>>=
+mod
+@
+
+y posteriormente mostramos un resumen de los resultados con la función “summary” (verdadera tabla ANOVA):
+
+<<>>=
+summary(mod)   # TABLA ANOVA
+@
+
+Esta tabla muestra los resultados del contraste planteado. El valor del estadístico de contraste es igual a 3.976 que deja a la derecha un p-valor de 0.00827, así que la respuesta dependerá del nivel de significación que se fije. Si fijamos un nivel de significación de 0.05 se concluye que hay evidencia suficiente para afirmar la existencia de alguna variabilidad entre la calidad del material de los diferentes fabricantes. Si fijamos un nivel de significación de 0.001, no podemos hacer tal afirmación.
+
+\section{Diseño en Bloques Aleatorizados}
+
+En los diseños estudiados anteriormente hemos supuesto que existe bastante homogeneidad entre las unidades experimentales. Pero puede suceder que dichas unidades experimentales sean heterogéneas y contribuyan a la variabilidad observada en la variable respuesta. Si en esta situación se utiliza un diseño completamente aleatorizado, no sabremos si la diferencia entre dos unidades experimentales sometidas a distintos tratamientos se debe a una diferencia real entre los efectos de los tratamientos o a la heterogeneidad de dichas unidades. Como resultado, el error experimental reflejará esta variabilidad. En esta situación se debe sustraer del error experimental la variabilidad producida por las unidades experimentales y para ello el experimentador puede formar bloques de manera que las unidades experimentales de cada bloque sean lo más homogéneas posible y los bloques entre sí sean heterogéneos.\\
+
+En el diseño en bloques Aleatorizados, primero se clasifican las unidades experimentales en grupos homogéneos, llamados bloques, y los tratamientos son entonces asignados aleatoriamente dentro de los bloques. Esta estrategia de diseño mejora efectivamente la precisión en las comparaciones al reducir la variabilidad residual.\\
+\\
+Distinguimos dos tipos de diseños en bloques aleatorizados:
+
+\begin{itemize}
+\item Los diseños en bloques completos aleatorizados (Todos los tratamientos se prueban en cada bloque exactamente vez).
+\item Los diseños por bloques incompletos aleatorizados (Todos los tratamientos no están representados en cada bloque, y aquellos que sí están en uno en particular se ensayan en él una sola vez).
+\end{itemize}
+
+\subsection{Diseño en Bloques Completos Aleatorizados}
+
+En esta sección presentamos el diseño en Bloques Completos Aleatorizados. La palabra bloque se refiere al hecho de que se ha agrupado a las unidades experimentales en función de alguna variable extraña; aleatorizado se refiere al hecho de que los tratamientos se asignan aleatoriamente dentro de los bloques; completo implica que se utiliza cada tratamiento exactamente una vez dentro de cada bloque y el término efectos fijos se aplica a bloques y tratamientos. Es decir, se supone que ni los bloques ni los tratamientos se eligen aleatoriamente. Además una caracterización de este diseño es que los efectos bloque y tratamiento son aditivos; es decir no hay interacción entre los bloques y los tratamientos.\\
+
+La descripción del diseño así como la terminología subyacente la vamos a introducir mediante el siguiente supuesto práctico.
+
+\subsubsection{Supuesto práctico 3}
+
+Abeto blanco, Abeto del Pirineo, es un árbol de gran belleza por la elegancia de sus formas y el exquisito perfume balsámico que destilan sus hojas y cortezas. Destilando hojas y madera se obtiene aceite de trementina muy utilizado en medicina contra torceduras y contusiones. En estos últimos años se ha observado que la producción de semillas ha descendido y con objeto de conseguir buenas producciones se proponen tres tratamientos. Se observa que árboles diferentes tienen distintas características naturales de reproducción, este efecto de las diferencias entre los árboles se debe de controlar y este control se realiza mediante bloques. En el experimento se utilizan 10 abetos, dentro de cada abeto se seleccionan tres ramas semejantes. Cada rama recibe exactamente uno de los tres tratamientos que son asignados aleatoriamente. Constituyendo cada árbol un bloque completo. Los datos obtenidos se presentan en la siguiente tabla donde se muestra el número de semillas producidas por rama.
+
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{|l|llllllllll|}
+\hline
+              & \multicolumn{10}{l|}{Abetos (Bloques)}                                                                                                                                                                                                     \\ \hline
+Tratamientos  & \multicolumn{1}{l|}{1}  & \multicolumn{1}{l|}{2}  & \multicolumn{1}{l|}{3}  & \multicolumn{1}{l|}{4}  & \multicolumn{1}{l|}{5}  & \multicolumn{1}{l|}{6}  & \multicolumn{1}{l|}{7} & \multicolumn{1}{l|}{8} & \multicolumn{1}{l|}{9}  & 10 \\ \hline
+Tratamiento 1 & \multicolumn{1}{l|}{7}  & \multicolumn{1}{l|}{8}  & \multicolumn{1}{l|}{9}  & \multicolumn{1}{l|}{10} & \multicolumn{1}{l|}{11} & \multicolumn{1}{l|}{8}  & \multicolumn{1}{l|}{7} & \multicolumn{1}{l|}{8} & \multicolumn{1}{l|}{7}  & 8  \\ \hline
+Tratamiento 2 & \multicolumn{1}{l|}{9}  & \multicolumn{1}{l|}{9}  & \multicolumn{1}{l|}{9}  & \multicolumn{1}{l|}{9}  & \multicolumn{1}{l|}{12} & \multicolumn{1}{l|}{10} & \multicolumn{1}{l|}{8} & \multicolumn{1}{l|}{8} & \multicolumn{1}{l|}{9}  & 9  \\ \hline
+Tratamiento 3 & \multicolumn{1}{l|}{10} & \multicolumn{1}{l|}{10} & \multicolumn{1}{l|}{12} & \multicolumn{1}{l|}{12} & \multicolumn{1}{l|}{14} & \multicolumn{1}{l|}{9}  & \multicolumn{1}{l|}{7} & \multicolumn{1}{l|}{7} & \multicolumn{1}{l|}{10} & 10 \\ \hline
+\end{tabular}
+\caption{Tabla de datos del supuesto practico 3}
+\end{center}
+\end{table}
+
+\begin{itemize}
+\item Son diez Abetos en los que se aplican cuatro tratamientos distintos
+\item No hay ningún otro factor que pueda afectar de forma significativa a los resultados
+\item Los tratamientos se asignan en orden aleatorio a cada abeto
+\item El número de semillas observadas se muestra en la Tabla 4.
+\item Variable respuesta: Número de semillas
+\item Factor: Tratamiento que tiene tres niveles. Es un factor de efectos fijos ya que viene decidido qué niveles concretos se van a utilizar.
+\item Bloque: Abeto que tiene diez niveles. Es un factor de efectos fijos ya que viene decidido qué niveles concretos se van a utilizar.
+\item Modelo completo: Los tres tratamientos se prueban en cada bloque exactamente una vez.
+\item Tamaño del experimento: Número total de observaciones (30).
+\end{itemize}
+
+Para realizar este supuesto en R debemos introducir primero los datos de forma correcta. Podemos introducir los datos directamente en R de forma manual o introducirlos previamente en un archivo de texto o Excel y leerlos en R.\\
+\\
+En este caso lo hacemos en un archivo de texto:\\
+
+Tenemos en cuenta que para que el ejercicio esté realizado de forma correcta los datos tienen que estar introducidos tal y como vienen en la imagen, es decir, las observaciones en una sola columna y a continuación especificado su tratamiento y su bloque correspondiente.\\
+
+Para cargar los datos utilizamos la función read.table indicando el nombre del archivo (que debe de estar en el directorio de trabajo) e indicando además que tiene cabecera.
+
+<<>>=
+semillas<-read.table("supuesto3.txt", header = TRUE)
+semillas
+@
+
+A continuación debemos transformar tanto la columna de los tratamientos como la de los bloques en un factor para podemos realizar los cálculos posteriores adecuadamente.
+
+<<>>=
+semillas$Tratamiento = factor(semillas$Tratamiento)
+semillas$Tratamiento
+semillas$Abeto = factor(semillas$Abeto)
+semillas$Abeto
+@
+
+Para calcular la tabla ANOVA primero hacemos uso de la función “aov” de la siguiente forma:
+
+<<>>=
+mod = aov(y ~ Tratamiento + Abeto, data = semillas)
+@
+
+donde:
+
+\begin{itemize}
+\item y es el nombre de la columna de las observaciones
+\item Tratamiento es el nombre de la columna en la que están representados los tratamientos
+\item Abeto es el nombre de la columna en la que están representados los bloques
+\item data = data.frame en el que están guardados los datos
+\end{itemize}
+
+<<>>=
+mod
+@
+
+y a continuación mostramos un resumen de los resultados con la función “summary” (verdadera tabla ANOVA):
+
+<<>>=
+summary(mod) # TABLA ANOVA
+@
+
+Puesto que la construcción de bloques se ha diseñado para comprobar el efecto de una variable, nos preguntamos si ha sido eficaz su construcción. En caso afirmativo, la suma de cuadrados de bloques explicaría una parte sustancial de la suma total de cuadrados. También se reduce la suma de cuadrados del error dando lugar a un aumento del valor del estadístico de contraste experimental utilizado para contrastar la igualdad de medias de los tratamientos y posibilitando que se rechace la Hipótesis nula, mejorándose la potencia del contraste.\\
+
+La construcción de bloques puede ayudar cuando se comprueba su eficacia pero debe evitarse su construcción indiscriminada. Ya que, la inclusión de bloques en un diseño da lugar a una disminución del número de grados de libertad para el error, aumenta el punto crítico para contrastar la Hipótesis nula y es más difícil rechazarla. La potencia del contraste es menor.\\
+\\
+La Tabla ANOVA, muestra que:
+
+\begin{itemize}
+\item El valor del estadístico de contraste de igualdad de bloques, F = 6.937 deja a su derecha un p-valor menor que 0.001, menor que el nivel de significación del 5\%, por lo que se rechaza la Hipótesis nula de igualdad de bloques. La eficacia de este diseño depende de los efectos de los bloques. Un valor grande de F de los bloques (6.937) implica que el factor bloque tiene un efecto grande. En este caso el diseño es más eficaz que el diseño completamente aleatorizado ya que si el cuadrado medio entre bloques es grande (6.089), el término residual será mucho menor (0.878) y el contraste principal de las medias de los tratamientos será más sensible a las diferencias entre tratamientos. Por lo tanto la inclusión del factor bloque en el modelo es acertada. Así, la producción de semillas depende del abeto.\\
+
+Si los efectos de los bloques son muy pequeños, el análisis de bloque quizás no sea necesario y en caso extremo, cuando el valor de F de los bloques es próximo a 1, puede llegar a ser perjudicial, ya que el número de grados de libertad, (I-1)(J-1 ), del denominador de la comparación de tratamientos es menor que el número de grados de libertad correspondiente, IJ-I, en el diseño completamente aleatorizado. Pero, ¿Cómo saber cuándo se puede prescindir de los bloques? La respuesta la tenemos en el valor de la F experimental de los bloques, se ha comprobado que si dicho valor es mayor que 3, no conviene prescindir de los bloques para efectuar los contrastes.
+
+\item El valor del estadístico de contraste de igualdad de tratamiento, F = 9.228 deja a su derecha un p-valor de 0.002, menor que el nivel de significación del 5\%, por lo que se rechaza la Hipótesis nula de igualdad de tratamientos. Así, los tratamientos influyen en el número de semillas. Es decir, existen diferencias significativas en el número de semillas entre los tres tratamientos.
+\end{itemize}
+
+El modelo que hemos propuesto hay que validarlo, para ello hay que comprobar si se verifican los cuatros supuestos expresados anteriormente.
+
+\subsubsection{Hipótesis de aditividad entre los bloques y tratamientos}
+
+La interacción entre el factor bloque y los tratamientos vamos a estudiarla analíticamente mediante el Test de Interacción de un grado de Tukey\\
+
+Para realizar este test en R tenemos que utilizar la library “daewr” y dentro de ella la función “Tukey1df”. De la siguiente forma:\\
+\\
+Primero hay que instalar el paquete daewr\\
+\\
+Para realizar este contraste hay que utilizar la libray daewr, para ello realizamos la siguiente orden
+
+<<>>=
+library(daewr)
+Tukey1df(semillas)
+@
+
+Puesto que el p-valor (Pr > F) es 1 no rechazamos la hipótesis nula de no interacción, es decir, no hay interacción entre los tratamientos aplicados y los abetos.
+
+\subsubsection{Hipótesis de Normalidad}
+
+La normalidad las vamos a comprobar analíticamente y gráficamente.\\
+
+Analíticamente mediante el  contraste de Shapiro-Wilk que es adecuado cuando las muestras son pequeñas (n<50)
+
+<<>>=
+ shapiro.test(mod$residuals)
+@
+
+Como podemos observar tenemos un p-valor de 0.3935 que aceptaría la hipótesis de normalidad por ser mayor al 5\% (nivel de significación usual).\\
+\\
+Gráficamente mediante el gráfico probabilístico normal. Para ello utilizamos la orden “qqnorm”
+
+<<>>=
+qqnorm(mod$residuals)
+@
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics{Rplot5}
+\caption{Estudio gráfico de la hipótesis de normalidad mediante el gráfico Q-Q Plot}
+\end{center}
+\end{figure}
+
+En esta gráfica observamos que prácticamente todos los puntos se encuentran sobre la diagonal por lo tanto podemos decir que no muestra una desviación marcada de la normalidad.
+
+\subsubsection{Hipótesis de Homogeneidad de Varianzas}
+
+Para comprobar la hipótesis de homocedasticidad utilizamos el Test de Barlett distinguiendo entre la igualdad entre varianzas del factor principal y la igualdad de varianzas del factor bloque.\\
+\\
+En nuestro ejemplo, el test para igualdad de varianzas del factor principal sería:
+
+<<>>=
+bartlett.test(semillas$y, semillas$Tratamiento)
+@
+
+El p-valor es del 0.1241 que al ser mayor del nivel significación usual del 5\% no podemos rechazar la hipótesis de igualdad de varianzas en el factor principal.\\
+\\
+De la misma manera procedemos para el factor bloque:
+
+<<>>=
+bartlett.test(semillas$y, semillas$Abeto)
+@
+
+El p-valor es mayor que 0.05 por lo que no podemos rechazar la hipótesis de igualdad de varianzas en el factor bloque.
+
+\subsubsection{Hipótesis de Independencia}
+
+Comprobaremos si se satisface el supuesto de independencia entre los residuos. Para ello tenemos que representar un gráfico de los residuos tipificados frente a los pronosticados. En R obtenemos varios gráficos a la vez que están incluidos en la estimación del modelo.\\
+\\
+Para verlos de forma correcta hacemos uso de las siguientes órdenes:
+
+<<>>=
+layout(matrix(c(1,2,3,4),2,2))
+plot(mod)
+@
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics{Rplot6}
+\caption{Estudio gráfico de la hipótesis de independencia de los residuos}
+\end{center}
+\end{figure}
+
+Nos fijamos en el primer gráfico que representa los  residuos frente a los valores ajustados y observamos que no hay ninguna tendencia sistemática. Concluimos que no hay sospechas para que se incumpla la hipótesis de independencia.
+
+\subsubsection{Comparaciones múltiples}
+
+Hemos probado anteriormente que se rechaza la Hipótesis nula de igualdad de tratamientos. Así, los tratamientos influyen en el número de semillas. Es decir, existen diferencias significativas en el número de semillas entre los tres tratamientos. Para saber entre que parejas de días estas diferencias son significativas aplicamos una prueba Post-hoc.\\
+
+El contraste de Comparaciones múltiples que vamos a utilizar es el Test de Duncan. Para poder hacer uso de él en R tenemos que instalar en primer lugar el paquete “agricolae” y dentro de él la función “duncan.test”.\\
+
+Destacar que este test hace las comparaciones especificándole si es para el factor principal o el factor bloque.\\
+\\
+Comenzamos con el factor principal:
+
+<<>>=
+library(agricolae)
+(duncan=duncan.test(mod, "Tratamiento" , group = T))
+@
+
+En el apartado “\$groups” concluimos que los tres tratamientos difieren significativamente entre sí.\\
+
+Se observa que la concentración media del número de semillas es mayor con el Tratamiento3 (10.1) y menor con el Tratamiento1 (8.3).\\
+\\
+Para el factor bloque:
+
+<<>>=
+(duncan=duncan.test(mod, "Abeto" , group = T))
+@
+
+Se observa que la prueba de Duncan ha agrupado los abetos 7, 8, 1, 9, 2, 6 y 10 en un mismo grupo, 1, 9 ,2 6, 10, 3 y 4, en otro grupo y un tercer está formada únicamente por el Abeto5. Inmediatamente se ve que por ejemplo el Abeto5 difiere de todos los demás, siendo en este abeto donde se produce el mayor número de semillas (12.333) y el menor en el Abeto7 (7.333).
+
+\subsection{Diseño en bloques Incompletos Aleatorizados}
+
+En los diseños en bloques Aleatorizados, puede suceder que no sea posible realizar todos los tratamientos en cada bloque. En estos casos es posible usar diseños en bloques Aleatorizados en los que cada tratamiento no está presente en cada bloque. Estos diseños reciben el nombre de diseño en bloque incompleto aleatorizado siendo uno de los más utilizados el diseño en bloque incompleto balanceado (BIB)
+
+\subsubsection{Supuesto práctico 4}
+
+Se realiza un estudio para comprobar la efectividad en el retraso del crecimiento de bacterias utilizando cuatro soluciones diferentes para lavar los envases de la leche. El análisis se realiza en el laboratorio y sólo se pueden realizar seis pruebas en un mismo día. Como los días son una fuente de variabilidad potencial, el investigador decide utilizar un diseño aleatorizado por bloques, pero al recopilar las observaciones durante seis días no ha sido posible aplicar todos los tratamientos en cada día, sino que sólo se han podido aplicar dos de las cuatro soluciones cada día. Se decide utilizar un diseño en bloques incompletos balanceado, donde I = 4 y K = 2.
+
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{|
+>{\columncolor[HTML]{34CDF9}}c |
+>{\columncolor[HTML]{34CDF9}}c 
+>{\columncolor[HTML]{34CDF9}}c 
+>{\columncolor[HTML]{34CDF9}}c 
+>{\columncolor[HTML]{34CDF9}}c 
+>{\columncolor[HTML]{34CDF9}}c 
+>{\columncolor[HTML]{34CDF9}}c |}
+\hline
+                    & \multicolumn{6}{c|}{\cellcolor[HTML]{34CDF9}\textbf{Días}}                                                                                                                                                                                                   \\ \hline
+\textbf{Soluciones} & \multicolumn{1}{c|}{\cellcolor[HTML]{34CDF9}1}  & \multicolumn{1}{c|}{\cellcolor[HTML]{34CDF9}2}  & \multicolumn{1}{c|}{\cellcolor[HTML]{34CDF9}3}  & \multicolumn{1}{c|}{\cellcolor[HTML]{34CDF9}4}  & \multicolumn{1}{c|}{\cellcolor[HTML]{34CDF9}5}  & 6  \\ \hline
+\textbf{Solución 1} & \multicolumn{1}{c|}{\cellcolor[HTML]{34CDF9}12} & \multicolumn{1}{c|}{\cellcolor[HTML]{34CDF9}24} & \multicolumn{1}{c|}{\cellcolor[HTML]{34CDF9}31} & \multicolumn{1}{c|}{\cellcolor[HTML]{34CDF9}}   & \multicolumn{1}{c|}{\cellcolor[HTML]{34CDF9}}   &    \\ \hline
+\textbf{Solución 2} & \multicolumn{1}{c|}{\cellcolor[HTML]{34CDF9}21} & \multicolumn{1}{c|}{\cellcolor[HTML]{34CDF9}}   & \multicolumn{1}{c|}{\cellcolor[HTML]{34CDF9}}   & \multicolumn{1}{c|}{\cellcolor[HTML]{34CDF9}}   & \multicolumn{1}{c|}{\cellcolor[HTML]{34CDF9}20} & 21 \\ \hline
+\textbf{Solución 3} & \multicolumn{1}{c|}{\cellcolor[HTML]{34CDF9}}   & \multicolumn{1}{c|}{\cellcolor[HTML]{34CDF9}}   & \multicolumn{1}{c|}{\cellcolor[HTML]{34CDF9}19} & \multicolumn{1}{c|}{\cellcolor[HTML]{34CDF9}18} & \multicolumn{1}{c|}{\cellcolor[HTML]{34CDF9}}   & 19 \\ \hline
+\textbf{Solución 4} & \multicolumn{1}{c|}{\cellcolor[HTML]{34CDF9}}   & \multicolumn{1}{c|}{\cellcolor[HTML]{34CDF9}15} & \multicolumn{1}{c|}{\cellcolor[HTML]{34CDF9}}   & \multicolumn{1}{c|}{\cellcolor[HTML]{34CDF9}19} & \multicolumn{1}{c|}{\cellcolor[HTML]{34CDF9}47} &    \\ \hline
+\end{tabular}
+\caption{Tabla de datos del Supuesto Práctico 4}
+\end{center}
+\end{table}
+
+El objetivo principal es estudiar la efectividad en el retraso del crecimiento de bacterias utilizando cuatro soluciones, por lo que se trata de un factor con cuatro niveles. Sin embrago, como los días son una fuente de variabilidad potencial, consideramos un factor bloque con seis niveles.
+
+\begin{itemize}
+\item Variable respuesta: Número de bacterias
+\item Factor: Soluciones que tiene cuatro niveles. Es un factor de efectos fijos ya que viene decidido qué niveles concretos se van a utilizar.
+\item Bloque: Días que tiene seis niveles. Es un factor de efectos fijos ya que viene decidido qué niveles concretos se van a utilizar.
+\item Modelo incompleto: Todos los tratamientos no se prueban en cada bloque.
+\item Tamaño del experimento: Número total de observaciones (12).
+\end{itemize}
+
+Podemos introducir los datos directamente en R de forma manual o introducirlos previamente en un archivo de texto o Excel y leerlos en R.
+
+<<>>=
+bacterias = read.table("supuesto4.txt", header = TRUE)
+bacterias
+@
+
+A continuación debemos transformar tanto la columna de los tratamientos como la de los bloques en un factor para poder realizar los cálculos posteriores adecuadamente.
+
+<<>>=
+bacterias$Soluciones = factor( bacterias$Soluciones)
+bacterias$Dias = factor( bacterias$Dias)
+@
+
+
+Para poder analizar los datos mediante un diseño BIB debemos instalar y cargar dos paquetes de R especializados en este tipo de diseños:
+
+<<>>=
+library(daewr)
+library(AlgDesign)
+@
+
+La función “BIBsize(t , k)” de la librería daewr nos permite saber si el diseño puede realizarse.  Calcula los parámetros del diseño donde
+
+\begin{itemize}
+\item t = número de niveles del factor tratamiento.
+\item k = número de tratamientos por bloque.
+\end{itemize}
+
+Ejecutamos:
+
+<<>>=
+BIBsize(t = 4 , k = 2)
+@
+
+El análisis de este modelo lo podemos realizar en R de dos formas:
+
+<<>>=
+mod1 <- aov(y ~ Dias + Soluciones, data = bacterias )
+@
+
+donde:
+
+\begin{itemize}
+\item y = nombre de la columna de las observaciones
+\item Soluciones = nombre de la columna en la que están representados los tratamientos
+\item Dias = nombre de la columna en la que están representados los bloques
+\item data = data.frame en el que están guardados los datos
+\end{itemize}
+
+<<>>=
+mod1
+@
+
+y posteriormente mostramos un resumen de los resultados con la función “summary” (verdadera tabla ANOVA)
+
+<<>>=
+summary(mod1)
+@
+
+El valor del estadístico de contraste de igualdad de Soluciones, F = 0.311, deja a su derecha un p-valor 0.819, mayor que el nivel de significación del 5\%, por lo que no se rechaza la Hipótesis Nula de igualdad de tratamientos. Por lo tanto el tipo de solución para lavar los envases de la leche no influye en el retraso del crecimiento de bacterias.\\
+
+Para evaluar el efecto de los bloques, la suma de cuadrados de bloques debe ajustarse por los tratamientos, por lo tanto primero se introducen los tratamientos y después los bloques:
+
+<<>>=
+mod2 <- aov(y ~ Soluciones + Dias, data = bacterias )
+mod2
+@
+
+<<>>=
+summary(mod2)
+@
+
+l valor del estadístico de contraste de igualdad de Días, F = 0.601, deja a su derecha un p-valor 0.712, mayor que el nivel de significación del 5\%, por lo que no se rechaza la Hipótesis nula de igualdad de bloques. Por lo tanto los días en los que se realiza la prueba para lavar los envases de la leche no influyen en el retraso del crecimiento de bacterias.\\
+\\
+Realizaremos el análisis evaluando tanto para los tratamientos como para los bloques ejecutando solo una función.\\
+\\
+Para ello necesitamos instalar y cargar el paquete “car”\\
+\\
+Una vez instalado y cargado el paquete realizamos el ANOVA
+
+<<>>=
+library(car)
+mod3 <- lm(y ~ Soluciones + Dias, data = bacterias )
+mod3
+@
+
+<<>>=
+car::Anova(mod3, type="III")
+@
+
+Los resultados obtenidos coinciden con los realizados primero a los tratamientos y después a los bloques.
+
+\section{Diseño en Cuadrados Latinos}
+
+Hemos estudiado en el apartado anterior que los diseños en bloques completos aleatorizados utilizan un factor de control o variable de bloque con objeto de eliminar su influencia en la variable respuesta y así reducir el error experimental. Los diseños en cuadrados latinos utilizan dos variables de bloque para reducir el error experimental.\\
+\\
+En resumen, podemos decir que un diseño en cuadrado latino tiene las siguientes características:
+
+\begin{itemize}
+\item Se controlan tres fuentes de variabilidad, un factor principal y dos factores de bloque.
+\item Cada uno de los factores tiene el mismo número de niveles, K .
+\item Cada nivel del factor principal aparece una vez en cada fila y una vez en cada columna.
+\item No hay interacción entre los factores.
+\end{itemize}
+
+\subsection{Supuesto práctico 5}
+
+Se estudia el rendimiento de un proceso químico en seis tiempos de reposo, A, B, C, D, E y F. Para ello, se consideran seis lotes de materia prima que reaccionan con seis concentraciones de ácido distintas, de manera que cada lote de materia prima en cada concentración de ácido se somete a un tiempo de reposo. Tanto la asignación de los tiempos de reposo a los lotes de materia prima, como la concentración de ácido, se hizo de forma aleatoria. Los datos del rendimiento del proceso químico se muestran en la siguiente tabla.
+
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{|
+>{\columncolor[HTML]{67FD9A}}c |
+>{\columncolor[HTML]{67FD9A}}c 
+>{\columncolor[HTML]{67FD9A}}c 
+>{\columncolor[HTML]{67FD9A}}c 
+>{\columncolor[HTML]{67FD9A}}c 
+>{\columncolor[HTML]{67FD9A}}c 
+>{\columncolor[HTML]{67FD9A}}c |}
+\hline
+                & \multicolumn{6}{c|}{\cellcolor[HTML]{67FD9A}\textbf{concentracion de acido}}                                                                                                                                                                                                  \\ \hline
+\textbf{Lote}   & \multicolumn{1}{c|}{\cellcolor[HTML]{67FD9A}1}     & \multicolumn{1}{c|}{\cellcolor[HTML]{67FD9A}2}     & \multicolumn{1}{c|}{\cellcolor[HTML]{67FD9A}3}    & \multicolumn{1}{c|}{\cellcolor[HTML]{67FD9A}4}     & \multicolumn{1}{c|}{\cellcolor[HTML]{67FD9A}5}     & 6     \\ \hline
+\textbf{Lote 1} & \multicolumn{1}{c|}{\cellcolor[HTML]{67FD9A}12A}   & \multicolumn{1}{c|}{\cellcolor[HTML]{67FD9A}24B}   & \multicolumn{1}{c|}{\cellcolor[HTML]{67FD9A}10C}  & \multicolumn{1}{c|}{\cellcolor[HTML]{67FD9A}18D}   & \multicolumn{1}{c|}{\cellcolor[HTML]{67FD9A}21D} & 18 F  \\ \hline
+\textbf{Lote 2} & \multicolumn{1}{c|}{\cellcolor[HTML]{67FD9A}21B}   & \multicolumn{1}{c|}{\cellcolor[HTML]{67FD9A}26C}   & \multicolumn{1}{c|}{\cellcolor[HTML]{67FD9A}24D}  & \multicolumn{1}{c|}{\cellcolor[HTML]{67FD9A}16D} & \multicolumn{1}{c|}{\cellcolor[HTML]{67FD9A}20F}   & 21A   \\ \hline
+\textbf{Lote 3} & \multicolumn{1}{c|}{\cellcolor[HTML]{67FD9A}20C}   & \multicolumn{1}{c|}{\cellcolor[HTML]{67FD9A}16D}   & \multicolumn{1}{c|}{\cellcolor[HTML]{67FD9A}19 E} & \multicolumn{1}{c|}{\cellcolor[HTML]{67FD9A}18 F}  & \multicolumn{1}{c|}{\cellcolor[HTML]{67FD9A}16A}   & 19B   \\ \hline
+\textbf{Lote 4} & \multicolumn{1}{c|}{\cellcolor[HTML]{67FD9A}22D}   & \multicolumn{1}{c|}{\cellcolor[HTML]{67FD9A}15E} & \multicolumn{1}{c|}{\cellcolor[HTML]{67FD9A}14F}  & \multicolumn{1}{c|}{\cellcolor[HTML]{67FD9A}19A}   & \multicolumn{1}{c|}{\cellcolor[HTML]{67FD9A}27B}   & 17C   \\ \hline
+\textbf{Lote 5} & \multicolumn{1}{c|}{\cellcolor[HTML]{67FD9A}15D} & \multicolumn{1}{c|}{\cellcolor[HTML]{67FD9A}13F}   & \multicolumn{1}{c|}{\cellcolor[HTML]{67FD9A}17A}  & \multicolumn{1}{c|}{\cellcolor[HTML]{67FD9A}25B}   & \multicolumn{1}{c|}{\cellcolor[HTML]{67FD9A}21C}   & 22D   \\ \hline
+\textbf{Lote 6} & \multicolumn{1}{c|}{\cellcolor[HTML]{67FD9A}17F}   & \multicolumn{1}{c|}{\cellcolor[HTML]{67FD9A}11A}   & \multicolumn{1}{c|}{\cellcolor[HTML]{67FD9A}12B}  & \multicolumn{1}{c|}{\cellcolor[HTML]{67FD9A}22C}   & \multicolumn{1}{c|}{\cellcolor[HTML]{67FD9A}14D}   & 20 E \\ \hline
+\end{tabular}
+\caption{Tabla de datos del Supuesto Práctico 5}
+\end{center}
+\end{table}
+
+El objetivo principal es estudiar la influencia de seis tiempos de reposo en el rendimiento de un proceso químico, por lo que se trata de un factor con seis niveles. Sin embargo, como los lotes de materia prima y las concentraciones son dos fuentes de variabilidad potencial, consideramos dos factores de bloque con seis niveles cada uno.
+
+\begin{itemize}
+\item Variable respuesta: Rendimiento
+\item Factor: Tiempo de reposo que tiene seis niveles. Es un factor de efectos fijos ya que viene decidido que niveles concretos se van a utilizar.
+\item Bloques: Lotes y Concentraciones, ambos con seis niveles y ambos son factores de efectos fijos.
+\item Tamaño del experimento: Número total de observaciones (36).
+\end{itemize}
+
+Para realizar este supuesto en R debemos introducir primero los datos de forma correcta. Podemos introducir los datos directamente en R de forma manual o introducirlos previamente en un archivo de texto o Excel y leerlos en R.\\
+\\
+En este caso lo hacemos en un archivo de texto\\
+
+Tenemos en cuenta que para que el ejercicio esté realizado de forma correcta los datos tienen que estar introducidos tal y como vienen en la imagen, es decir, las observaciones en una sola columna y a continuación especificado su tratamiento, su bloque y después la letra latina correspondiente.\\
+
+Para cargar los datos utilizamos la función read.table indicando el nombre del archivo (que debe de estar en el directorio de trabajo) e indicando además que tiene cabecera.
+
+<<>>=
+latino <- read.table("supuesto5.txt", header = TRUE, dec= ",")
+latino
+@
+
+A continuación debemos transformar tanto la columna de los tratamiento como la de los bloques en un factor para podemos realizar los cálculos posteriores adecuadamente.
+
+<<>>=
+latino$Lote <- factor(latino$Lote)
+latino$Concentraciones <- factor(latino$Concentraciones)
+latino$Tiempo_de_reposo <- factor(latino$Tiempo_de_reposo)
+@
+
+Para calcular la tabla ANOVA primero hacemos uso de la función “aov” de la siguiente forma:
+
+<<>>=
+mod1 <- aov(Observaciones~ Lote + Concentraciones + Tiempo_de_reposo, data = latino )
+@
+
+donde:
+
+\begin{itemize}
+\item Observaciones: Nombre de la columna de las observaciones
+\item Lote :  Nombre de la columna en la que están representados los tratamientos
+\item Concentraciones : Nombre de la columna en la que está representado el primer factor bloque
+\item Tiempo\_de\_reposo: Nombre de la columna en la que está representado el segundo factor bloque (letras latinas)
+\item data = data.frame en el que están guardados los datos
+\end{itemize}
+
+<<>>=
+mod1
+@
+
+y posteriormente mostramos un resumen de los resultados con la función “summary” (verdadera tabla ANOVA):
+
+<<>>=
+summary(mod1)
+@
+
+Observando los valores de los p-valores, 0.281, 0.368 y 0.553; mayores respectivamente que el nivel de significación del 5\%, deducimos que ningún efecto es significativo.
+
+\section{Diseño en Cuadrados Greco-Latinos}
+
+El modelo en cuadrado greco-latino se puede considerar como una extensión del modelo en cuadrado latino en el que se incluye una tercera variable control o variable de bloque. En este modelo como en el diseño en cuadrado latino, todos los factores deben tener el mismo número de niveles, K, y el número de observaciones necesarias sigue siendo $K^2$ Este diseño es, por tanto, una fracción del diseño completo en bloques aleatorizados con un factor principal y tres factores secundarios que requeriría $K^4$ observaciones.\\
+\\
+La Tabla siguiente ilustra un cuadrado greco-latino para K=4
+
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{|
+>{\columncolor[HTML]{FFCCC9}}c 
+>{\columncolor[HTML]{FFCCC9}}c 
+>{\columncolor[HTML]{FFCCC9}}c 
+>{\columncolor[HTML]{FFCCC9}}c |}
+\hline
+\multicolumn{4}{|c|}{\cellcolor[HTML]{FFCCC9}\textbf{Cuadrado G-L 4}}                                                                                                                                                                                                                                                                           \\ \hline
+\multicolumn{1}{|c|}{\cellcolor[HTML]{FFCCC9}\begin{tabular}[c]{@{}c@{}} \hspace{0.5cm} A \hspace{0.5cm}\\    \\  $\alpha$\end{tabular}} & \multicolumn{1}{c|}{\cellcolor[HTML]{FFCCC9}\begin{tabular}[c]{@{}c@{}} \hspace{0.5cm} B \hspace{0.5cm}\\    \\ $\beta$\end{tabular}}  & \multicolumn{1}{c|}{\cellcolor[HTML]{FFCCC9}\begin{tabular}[c]{@{}c@{}} \hspace{0.5cm} C \hspace{0.5cm}\\    \\  $\gamma$\end{tabular}} & \begin{tabular}[c]{@{}c@{}}D\\    \\ $\delta$\end{tabular}  \\ \hline
+\multicolumn{1}{|c|}{\cellcolor[HTML]{FFCCC9}\begin{tabular}[c]{@{}c@{}} \hspace{0.5cm} D \hspace{0.5cm}\\    \\  $\gamma$\end{tabular}} & \multicolumn{1}{c|}{\cellcolor[HTML]{FFCCC9}\begin{tabular}[c]{@{}c@{}}C\\    \\ $\delta$\end{tabular}}  & \multicolumn{1}{c|}{\cellcolor[HTML]{FFCCC9}\begin{tabular}[c]{@{}c@{}}B\\    \\ $\alpha$\end{tabular}}  & \begin{tabular}[c]{@{}c@{}}A\\    \\  $\beta$\end{tabular} \\ \hline
+\multicolumn{1}{|c|}{\cellcolor[HTML]{FFCCC9}\begin{tabular}[c]{@{}c@{}}B\\    \\ $\delta$\end{tabular}}  & \multicolumn{1}{c|}{\cellcolor[HTML]{FFCCC9}\begin{tabular}[c]{@{}c@{}}A\\    \\ $\gamma$\end{tabular}}  & \multicolumn{1}{c|}{\cellcolor[HTML]{FFCCC9}\begin{tabular}[c]{@{}c@{}}D\\    \\ $\beta$\end{tabular}}  & \begin{tabular}[c]{@{}c@{}}C\\    \\ $\alpha$\end{tabular}  \\ \hline
+\multicolumn{1}{|c|}{\cellcolor[HTML]{FFCCC9}\begin{tabular}[c]{@{}c@{}}C\\    \\ $\beta$\end{tabular}}  & \multicolumn{1}{c|}{\cellcolor[HTML]{FFCCC9}\begin{tabular}[c]{@{}c@{}}D\\    \\  $\alpha$\end{tabular}} & \multicolumn{1}{c|}{\cellcolor[HTML]{FFCCC9}\begin{tabular}[c]{@{}c@{}}A\\    \\ $\delta$\end{tabular}}  & \begin{tabular}[c]{@{}c@{}}B\\    \\ $\gamma$\end{tabular}  \\ \hline
+\end{tabular}
+\caption{Ejemplo de  un cuadrado greco-latino para K=4}
+\end{center}
+\end{table}
+
+Este diseño lo estudiaremos a continuación mediante el supuesto práctico 6.
+
+\subsection{Supuesto práctico 6}
+
+Para comprobar el rendimiento de un proceso químico en cinco tiempos de reposo, se consideran cinco lotes de materia prima que reaccionan con cinco concentraciones de ácido distintas a cinco temperaturas distintas, de manera que cada lote de materia prima con cada concentración de ácido y cada temperatura se someten a un tiempo de reposo. Tanto la asignación de los tiempos de reposo a los lotes de materia prima, como las concentraciones de ácido, y las temperaturas, se hizo de forma aleatoria. En este estudio el científico considera que tanto los lotes de materia prima, las concentraciones y las temperaturas pueden influir en el rendimiento del proceso, por lo que los considera como variables de bloque cada una con cinco niveles y decide plantear un diseño por cuadrados greco-latinos como el que muestra en la siguiente tabla
+
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{|
+>{\columncolor[HTML]{CBCEFB}}c 
+>{\columncolor[HTML]{CBCEFB}}c 
+>{\columncolor[HTML]{CBCEFB}}c 
+>{\columncolor[HTML]{CBCEFB}}c 
+>{\columncolor[HTML]{CBCEFB}}c 
+>{\columncolor[HTML]{CBCEFB}}c |}
+\hline
+\multicolumn{6}{|c|}{\cellcolor[HTML]{CBCEFB}rendimiento}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                \\ \hline
+\multicolumn{1}{|c|}{\cellcolor[HTML]{CBCEFB}}       & \multicolumn{5}{c|}{\cellcolor[HTML]{CBCEFB}concentracion de acido}                                                                                                                                                                                                                                                                                                                                                                                                                                                               \\ \hline
+\multicolumn{1}{|c|}{\cellcolor[HTML]{CBCEFB}Lote}   & \multicolumn{1}{c|}{\cellcolor[HTML]{CBCEFB}1}                                                             & \multicolumn{1}{c|}{\cellcolor[HTML]{CBCEFB}2}                                                             & \multicolumn{1}{c|}{\cellcolor[HTML]{CBCEFB}3}                                                               & \multicolumn{1}{c|}{\cellcolor[HTML]{CBCEFB}4}                                                                    & 5                                                                    \\ \hline
+\multicolumn{1}{|c|}{\cellcolor[HTML]{CBCEFB}Lote 1} & \multicolumn{1}{c|}{\cellcolor[HTML]{CBCEFB}\begin{tabular}[c]{@{}c@{}}26\\    \\ A $\alpha$\end{tabular}} & \multicolumn{1}{c|}{\cellcolor[HTML]{CBCEFB}\begin{tabular}[c]{@{}c@{}}21\\    \\ B $\beta$\end{tabular}}  & \multicolumn{1}{c|}{\cellcolor[HTML]{CBCEFB}\begin{tabular}[c]{@{}c@{}}19\\    \\ C $\gamma$\end{tabular}}   & \multicolumn{1}{c|}{\cellcolor[HTML]{CBCEFB}\begin{tabular}[c]{@{}c@{}}13\\    \\ D $\delta$\end{tabular}}        & \begin{tabular}[c]{@{}c@{}}21\\    \\  E $\eta$\end{tabular}         \\ \hline
+\multicolumn{1}{|c|}{\cellcolor[HTML]{CBCEFB}Lote 2} & \multicolumn{1}{c|}{\cellcolor[HTML]{CBCEFB}\begin{tabular}[c]{@{}c@{}}22\\    \\ B $\gamma$\end{tabular}} & \multicolumn{1}{c|}{\cellcolor[HTML]{CBCEFB}\begin{tabular}[c]{@{}c@{}}26\\    \\  C$\delta$\end{tabular}} & \multicolumn{1}{c|}{\cellcolor[HTML]{CBCEFB}\begin{tabular}[c]{@{}c@{}}24\\    \\ D $\eta$\end{tabular}}     & \multicolumn{1}{c|}{\cellcolor[HTML]{CBCEFB}\begin{tabular}[c]{@{}c@{}}16\\    \\  E $\alpha$\end{tabular}} & \begin{tabular}[c]{@{}c@{}}20\\    \\  A $\beta$\end{tabular}       \\ \hline
+\multicolumn{1}{|c|}{\cellcolor[HTML]{CBCEFB}Lote 3} & \multicolumn{1}{c|}{\cellcolor[HTML]{CBCEFB}\begin{tabular}[c]{@{}c@{}}29\\    \\ C $\eta$\end{tabular}}   & \multicolumn{1}{c|}{\cellcolor[HTML]{CBCEFB}\begin{tabular}[c]{@{}c@{}}26\\    \\ D $\alpha$\end{tabular}}  & \multicolumn{1}{c|}{\cellcolor[HTML]{CBCEFB}\begin{tabular}[c]{@{}c@{}}19\\    \\ E $\beta$\end{tabular}}    & \multicolumn{1}{c|}{\cellcolor[HTML]{CBCEFB}\begin{tabular}[c]{@{}c@{}}18\\    \\ A $\gamma$\end{tabular}}        & \begin{tabular}[c]{@{}c@{}}16\\    \\ B $\delta$\end{tabular} \\ \hline
+\multicolumn{1}{|c|}{\cellcolor[HTML]{CBCEFB}Lote 4} & \multicolumn{1}{c|}{\cellcolor[HTML]{CBCEFB}\begin{tabular}[c]{@{}c@{}}32\\    \\ D $\beta$\end{tabular}}  & \multicolumn{1}{c|}{\cellcolor[HTML]{CBCEFB}\begin{tabular}[c]{@{}c@{}}15\\    \\ E $\gamma$\end{tabular}} & \multicolumn{1}{c|}{\cellcolor[HTML]{CBCEFB}\begin{tabular}[c]{@{}c@{}}14\\    \\ A $\delta$\end{tabular}}   & \multicolumn{1}{c|}{\cellcolor[HTML]{CBCEFB}\begin{tabular}[c]{@{}c@{}}19\\    \\ B $\eta$\end{tabular}}          & \begin{tabular}[c]{@{}c@{}}27\\    \\ C $\alpha$\end{tabular}         \\ \hline
+\multicolumn{1}{|c|}{\cellcolor[HTML]{CBCEFB}Lote 5} & \multicolumn{1}{c|}{\cellcolor[HTML]{CBCEFB}\begin{tabular}[c]{@{}c@{}}25\\    \\ E $\delta$\end{tabular}} & \multicolumn{1}{c|}{\cellcolor[HTML]{CBCEFB}\begin{tabular}[c]{@{}c@{}}18\\    \\ A $\eta$\end{tabular}}   & \multicolumn{1}{c|}{\cellcolor[HTML]{CBCEFB}\begin{tabular}[c]{@{}c@{}}19\\    \\ B $ \alpha $\end{tabular}} & \multicolumn{1}{c|}{\cellcolor[HTML]{CBCEFB}\begin{tabular}[c]{@{}c@{}}25\\    \\ C $\beta$\end{tabular}}         & \begin{tabular}[c]{@{}c@{}}21\\    \\ D $\gamma$\end{tabular}        \\ \hline
+\end{tabular}
+\caption{Tabla de datos del Supuesto Práctico 6}
+\end{center}
+\end{table}
+
+La variable respuesta que vamos a estudiar es el rendimiento del proceso químico. El factor principal es tiempo de reposo que se presenta con cinco niveles.
+
+\begin{itemize}
+\item Variable respuesta: Rendimiento
+Factor: Tiempos de reposo que tiene cinco niveles. Es un factor de efectos fijos ya que viene decidido que niveles concretos se van a utilizar.
+\item Bloques: Lotes, Concentraciones y Temperaturas, cada uno con cinco niveles y de efectos fijos.
+\item Tamaño del experimento: Número total de observaciones (25).
+\end{itemize} 
+
+Para realizar este supuesto en R debemos introducir primero los datos de forma correcta. Podemos introducir los datos directamente en R de forma manual o introducirlos previamente en un archivo de texto o Excel y leerlos en R.\\
+\\
+En este caso lo hacemos en un archivo de texto.
+
+Tenemos en cuenta que para que el ejercicio esté realizado de forma correcta los datos tienen que estar introducidos tal y como vienen en la imagen, es decir,  las observaciones en una sola columna y a continuación especificado su tratamiento, su bloque correspondiente y después la letra latina y griega correspondiente (En este caso hemos cambiado las letras griegas como las últimas del alfabeto latino por facilidad a la hora de escribirlas).\\
+
+Para cargar los datos utilizamos la función read.table indicando el nombre del archivo (que debe de estar en el directorio de trabajo) e indicando además que tiene cabecera.
+
+<<>>=
+greco <- read.table("supuesto6.txt", header = TRUE, dec= ",")
+greco
+@
+
+A continuación debemos transformar tanto la columna de los tratamiento como la de los bloques en un factor para podemos realizar los cálculos posteriores adecuadamente.
+
+Para calcular la tabla ANOVA primero hacemos uso de la función “aov” de la siguiente forma:
+
+<<>>=
+greco$Lote <- factor(greco$Lote)
+greco$Temperaturas <- factor(greco$Temperaturas)
+greco$Tiempo_de_reposo <- factor(greco$Tiempo_de_reposo)
+greco$Concentraciones <- factor(greco$Concentraciones)
+mod1 <- aov(Observaciones~ Lote + Concentraciones + Tiempo_de_reposo + Temperaturas, data = greco )
+mod1
+@
+
+
+donde:
+
+\begin{itemize}
+\item Observaciones: Nombre de la columna de las observaciones
+\item Lote: Nombre de la columna en la que están representados los tratamientos
+\item Concentraciones = Nombre de la columna en la que está representado el primer factor bloque
+\item Tiempo\_de\_reposo = Nombre de la columna en la que está representado el segundo factor bloque (letras latinas)
+\item Temperaturas: Nombre de la columna en la que está representado el tercer factor bloque
+\item Data:  data.frame en el que están guardados los datos
+\end{itemize}
+
+y posteriormente mostramos un resumen de los resultados con la función “summary” (verdadera tabla ANOVA):
+
+<<>>=
+summary(mod1)
+@
+
+Observando los valores de los p-valores, 0.150, 0.053, 0.912 y 0.020, deducimos que el único efecto significativo, al nivel de significación del 5\%, es el efecto de las distintas concentraciones sobre el rendimiento del proceso químico.
+
+\section{Diseño en Cuadrados de Youden}
+
+Hemos estudiado que en el diseño en cuadrado latino se tiene que verificar que los tres factores tengan el mismo número de niveles, es decir que hay el mismo número de filas, de columnas y de letras latinas. Sin embargo, puede suceder que el número de niveles disponibles de uno de los factores de control sea menor que el número de tratamientos, en este caso estaríamos ante un diseño en cuadrado latino incompleto. Estos diseños fueron estudiados por W.J. Youden y se conocen con el nombre de cuadrados de Youden.\\
+\\
+Este diseño lo estudiaremos a continuación mediante el supuesto práctico 7.
+
+\subsection{Supuesto práctico 7}
+
+Consideremos de nuevo el experimento sobre el rendimiento de un proceso químico en el que se está interesado en estudiar seis tiempos de reposo, A, B, C, D, E y F y se desea eliminar estadísticamente el efecto de los lotes materia prima y de las concentraciones de ácido distintas. Pero supongamos que sólo se dispone de cinco tipos de concentraciones. Para analizar este experimento se decidió utilizar un cuadrado de Youden con seis filas (los lotes de materia prima), cinco columnas (las distintas concentraciones) y seis letras latinas (los tiempos de reposo). Los datos correspondientes se muestran en la siguiente tabla.
+
+
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{|
+>{\columncolor[HTML]{DAE8FC}}c |
+>{\columncolor[HTML]{DAE8FC}}c 
+>{\columncolor[HTML]{DAE8FC}}c 
+>{\columncolor[HTML]{DAE8FC}}c 
+>{\columncolor[HTML]{DAE8FC}}c 
+>{\columncolor[HTML]{DAE8FC}}c |}
+\hline
+                & \multicolumn{5}{c|}{\cellcolor[HTML]{DAE8FC}\textbf{concentracion de acido}}                                                                                                                                                                                                                                                                                                                                                                                                                  \\ \hline
+\textbf{Lote}   & \multicolumn{1}{c|}{\cellcolor[HTML]{DAE8FC}1}                                                     & \multicolumn{1}{c|}{\cellcolor[HTML]{DAE8FC}2}                                                           & \multicolumn{1}{c|}{\cellcolor[HTML]{DAE8FC}3}                                                     & \multicolumn{1}{c|}{\cellcolor[HTML]{DAE8FC}4}                                                             & 5                                                           \\ \hline
+\textbf{Lote 1} & \multicolumn{1}{c|}{\cellcolor[HTML]{DAE8FC}\begin{tabular}[c]{@{}c@{}}12\\    \\ A\end{tabular}}  & \multicolumn{1}{c|}{\cellcolor[HTML]{DAE8FC}\begin{tabular}[c]{@{}c@{}}24\\    \\ B\end{tabular}}        & \multicolumn{1}{c|}{\cellcolor[HTML]{DAE8FC}\begin{tabular}[c]{@{}c@{}}10\\    \\ C\end{tabular}}  & \multicolumn{1}{c|}{\cellcolor[HTML]{DAE8FC}\begin{tabular}[c]{@{}c@{}}18\\    \\ D\end{tabular}}          & \begin{tabular}[c]{@{}c@{}}21\\    \\  E\end{tabular}      \\ \hline
+\textbf{Lote 2} & \multicolumn{1}{c|}{\cellcolor[HTML]{DAE8FC}\begin{tabular}[c]{@{}c@{}}21\\    \\ B\end{tabular}}  & \multicolumn{1}{c|}{\cellcolor[HTML]{DAE8FC}\begin{tabular}[c]{@{}c@{}}26\\    \\  C\end{tabular}}       & \multicolumn{1}{c|}{\cellcolor[HTML]{DAE8FC}\begin{tabular}[c]{@{}c@{}}24\\    \\ D\end{tabular}}  & \multicolumn{1}{c|}{\cellcolor[HTML]{DAE8FC}\begin{tabular}[c]{@{}c@{}}16\\    \\  E\end{tabular}} & \begin{tabular}[c]{@{}c@{}}20\\    \\  F\end{tabular}       \\ \hline
+\textbf{Lote 3} & \multicolumn{1}{c|}{\cellcolor[HTML]{DAE8FC}\begin{tabular}[c]{@{}c@{}}20\\    \\ C\end{tabular}}  & \multicolumn{1}{c|}{\cellcolor[HTML]{DAE8FC}\begin{tabular}[c]{@{}c@{}}16\\    \\ D\end{tabular}} & \multicolumn{1}{c|}{\cellcolor[HTML]{DAE8FC}\begin{tabular}[c]{@{}c@{}}19\\    \\ E\end{tabular}} & \multicolumn{1}{c|}{\cellcolor[HTML]{DAE8FC}\begin{tabular}[c]{@{}c@{}}18\\    \\ F\end{tabular}}          & \begin{tabular}[c]{@{}c@{}}16\\    \\ A\end{tabular} \\ \hline
+\textbf{Lote 4} & \multicolumn{1}{c|}{\cellcolor[HTML]{DAE8FC}\begin{tabular}[c]{@{}c@{}}22\\    \\ D\end{tabular}}  & \multicolumn{1}{c|}{\cellcolor[HTML]{DAE8FC}\begin{tabular}[c]{@{}c@{}}15\\    \\ E\end{tabular}}       & \multicolumn{1}{c|}{\cellcolor[HTML]{DAE8FC}\begin{tabular}[c]{@{}c@{}}14\\    \\ F\end{tabular}}  & \multicolumn{1}{c|}{\cellcolor[HTML]{DAE8FC}\begin{tabular}[c]{@{}c@{}}19\\    \\ A\end{tabular}}          & \begin{tabular}[c]{@{}c@{}}27\\    \\ B\end{tabular}        \\ \hline
+\textbf{Lote 5} & \multicolumn{1}{c|}{\cellcolor[HTML]{DAE8FC}\begin{tabular}[c]{@{}c@{}}15\\    \\ E\end{tabular}} & \multicolumn{1}{c|}{\cellcolor[HTML]{DAE8FC}\begin{tabular}[c]{@{}c@{}}13\\    \\ F\end{tabular}}        & \multicolumn{1}{c|}{\cellcolor[HTML]{DAE8FC}\begin{tabular}[c]{@{}c@{}}17\\    \\ A\end{tabular}}  & \multicolumn{1}{c|}{\cellcolor[HTML]{DAE8FC}\begin{tabular}[c]{@{}c@{}}25\\    \\ B\end{tabular}}          & \begin{tabular}[c]{@{}c@{}}21\\    \\ C\end{tabular}        \\ \hline
+\textbf{Lote 6} & \multicolumn{1}{c|}{\cellcolor[HTML]{DAE8FC}\begin{tabular}[c]{@{}c@{}}17\\    \\ F\end{tabular}}  & \multicolumn{1}{c|}{\cellcolor[HTML]{DAE8FC}\begin{tabular}[c]{@{}c@{}}11\\    \\ A\end{tabular}}        & \multicolumn{1}{c|}{\cellcolor[HTML]{DAE8FC}\begin{tabular}[c]{@{}c@{}}12\\    \\ B\end{tabular}}  & \multicolumn{1}{c|}{\cellcolor[HTML]{DAE8FC}\begin{tabular}[c]{@{}c@{}}22\\    \\ C\end{tabular}}          & \begin{tabular}[c]{@{}c@{}}14\\    \\ D\end{tabular}        \\ \hline
+\end{tabular}
+\caption{Tabla de datos del Supuesto Práctico 7}
+\end{center}
+\end{table}
+
+
+
+
+\end{document}
+
+

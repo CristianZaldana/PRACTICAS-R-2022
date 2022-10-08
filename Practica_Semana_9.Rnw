@@ -31,6 +31,7 @@
 \renewcommand{\footrulewidth}{0.5pt}
 
 \begin{document}
+\SweaveOpts{concordance=TRUE}
 \thispagestyle{empty}
 \centering{\textbf{UNIVERSIDAD DE EL SALVADOR}}\\
 \vspace{1cm}
@@ -64,7 +65,7 @@
 \newpage
 \listoffigures
 \newpage
-\SweaveOpts{concordance=TRUE}
+
 
 \justify
 
@@ -163,6 +164,7 @@ Para cargar los datos utilizamos la función read.table indicando el nombre del 
 <<>>=
 contaminacion <- read.table("supuesto1.txt", header = TRUE)
 head(contaminacion)
+
 @
 
 Se puede realizar de dos formas:\\
@@ -299,7 +301,7 @@ Observamos el contraste de Shapiro-Wilk que es adecuado cuando las muestras son 
 \\
 Podemos verlo también gráficamente con la orden “qqnorm”
 
-<<>>=
+<<fig=FALSE>>=
 qqnorm (mod$residuals)
 @
 
@@ -1040,6 +1042,444 @@ Consideremos de nuevo el experimento sobre el rendimiento de un proceso químico
 \caption{Tabla de datos del Supuesto Práctico 7}
 \end{center}
 \end{table}
+
+Observamos que este diseño se convierte en un cuadrado latino si se le añade la columna F, A, B, C, D y E. En general, un cuadrado de Youden podemos considerarlo como un cuadrado latino al que le falta al menos una columna. Sin embargo, un cuadrado latino no se convierte en un cuadrado de Youden eliminando arbitrariamente más de una columna.\\
+
+El objetivo principal es estudiar la influencia de seis tiempos de reposo en el rendimiento de un proceso químico, por lo que se trata de un factor con seis niveles. Sin embargo, como los lotes de materia prima y las concentraciones son dos fuentes de variabilidad potencial, consideramos dos factores de bloque con seis y cinco niveles, respectivamente.
+
+\begin{itemize}
+\item Variable respuesta: Rendimiento
+\item Factor: Tiempo de reposo que tiene seis niveles. Es un factor de efectos fijos ya que viene decidido que niveles concretos se van a utilizar.
+\item Bloques: Lotes y Concentraciones, con seis y cinco niveles, respectivamente y ambos son factores de efectos fijos.
+\item Tamaño del experimento: Número total de observaciones (30).
+\item Nombre: Rendimiento ;   Tipo: Numérico ;   Anchura: 2 ;   Decimales: 0
+\end{itemize}
+
+Para realizar este supuesto en R debemos introducir primero los datos de forma correcta. Podemos introducir los datos directamente en R de forma manual o introducirlos previamente en un archivo de texto o Excel y leerlos en R.\\
+\\
+En este caso lo hacemos en un archivo de texto.\\
+\\
+Para cargar los datos utilizamos la función read.table indicando el nombre del archivo (que debe de estar en el directorio de trabajo) e indicando además que tiene cabecera.
+
+<<>>=
+youden <- read.table("supuesto7.txt", header = TRUE)
+youden
+@
+
+A continuación debemos transformar tanto la columna de los tratamiento como la de los bloques en un factor para podemos realizar los cálculos posteriores adecuadamente.
+
+<<>>=
+youden$Lote <- factor(youden$Lote)
+youden$Concentraciones <- factor(youden$Concentraciones)
+youden$Tiempo_de_reposo <- factor(youden$Tiempo_de_reposo)
+@
+
+Para cada factor realizamos una tabla ANOVA:
+
+\begin{itemize}
+\item Factor principal:\\
+Para evaluar el efecto de los tratamientos, la suma de cuadrados de tratamientos debe ajustarse por bloques, por lo tanto primero se introducen los bloques y después los tratamientos.\\
+\\
+Para calcular la tabla ANOVA hacemos uso de la función “aov” (asume suma de cuadrados tipo I) de la siguiente forma:
+
+<<>>=
+mod1 <- aov(Observaciones~ Tiempo_de_reposo + Lote + Concentraciones, data = youden )
+mod1
+summary(mod1)
+@
+
+donde:\\
+
+\item Observaciones: Nombre de la columna de las observaciones.
+\item Lote: Nombre de la columna en la que están representados los tratamientos.
+\item Concentraciones: Nombre de la columna en la que está representado el primer factor bloque.
+\item Tiempo\_de\_reposo: Nombre de la columna en la que está representado el segundo factor bloque (letras latinas).
+\item data = data.frame en el que están guardados los datos.
+
+El  p-valor, 0.532, es mayor que el nivel de significación del 5\%, deducimos que el factor principal: Concentraciones  no es significativo.
+
+\item Factor Bloque: Lotes.\\
+
+Para evaluar el efecto del primero de los bloques, la suma de cuadrados de bloques debe ajustarse por los tratamientos, por lo tanto primero se introducen los tratamientos y después los bloques:
+
+<<>>=
+mod2 <- aov(Observaciones~ Concentraciones  +Tiempo_de_reposo + Lote , data = youden )
+mod2
+summary(mod2)
+@
+
+El  p-valor, 0.356, es mayor que el nivel de significación del 5\%, deducimos que el Factor Bloque: Lotes no es significativo.
+
+\item Factor Bloque:Tiempo\_de\_reposo\\
+
+Para evaluar el efecto del segundo bloque, la suma de cuadrados de bloques debe ajustarse también por los tratamientos, por lo tanto primero se introducen los tratamientos y después los bloques:
+
+<<>>=
+mod3 <- aov(Observaciones~ Concentraciones  + Lote +Tiempo_de_reposo , data = youden )
+mod3
+summary(mod3)
+@
+
+El p-valor es 0.213; mayor que el nivel de significación del 5\%, deducimos que Factor Bloque:Tiempo\_de\_reposo no es significativo.
+
+\section{Diseños Factoriales}
+
+En muchos experimentos es frecuente considerar dos o más factores y estudiar el efecto conjunto que dichos factores producen sobre la variable respuesta. Para resolver esta situación se utiliza el Diseño Factorial.\\
+
+Se entiende por diseño factorial aquel diseño en el que se investigan todas las posibles combinaciones de los niveles de los factores en cada réplica del experimento. En estos diseños, los factores que intervienen tienen la misma importancia a priori y se supone por tanto, la posible presencia de interacción. En este epígrafe vamos a considerar únicamente modelos de efectos fijos.
+
+\subsection{Diseños factoriales con dos factores}
+
+En primer lugar vamos a estudiar los diseños más simples, es decir aquellos en los que intervienen sólo dos factores. Supongamos que hay a niveles para el factor A y b niveles del factor B, cada réplica del experimento contiene todas las posibles combinaciones de tratamientos, es decir contiene los ab tratamientos posibles.
+
+\subsubsection{El modelo sin replicación}
+\subsubsection{Supuesto práctico 8}
+
+En unos laboratorios se está investigando sobre el tiempo de supervivencia de unos animales a los que se les suministra al azar tres tipos de venenos y cuatro antídotos distintos. Se pretende estudiar si los tiempos de supervivencia de los anímales varían en función de las combinaciones veneno-antídoto. Los datos que se recogen en la tabla adjunta son los tiempos de supervivencia en horas.
+
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{|c|cccc|}
+\hline
+         & \multicolumn{4}{c|}{Antídoto}                                                                                            \\ \hline
+Veneno   & \multicolumn{1}{c|}{Antídoto   1} & \multicolumn{1}{c|}{Antídoto   2} & \multicolumn{1}{c|}{Antídoto   3} & Antídoto   4 \\ \hline
+Veneno 1 & \multicolumn{1}{c|}{4.5}          & \multicolumn{1}{c|}{11}           & \multicolumn{1}{c|}{4.5}          & 7.1          \\ \hline
+Veneno 2 & \multicolumn{1}{c|}{2.9}          & \multicolumn{1}{c|}{6.1}          & \multicolumn{1}{c|}{3.5}          & 10.2         \\ \hline
+Veneno 3 & \multicolumn{1}{c|}{2.1}          & \multicolumn{1}{c|}{3.7}          & \multicolumn{1}{c|}{2.5}          & 3.6          \\ \hline
+\end{tabular}
+\caption{Tabla de datos del Supuesto Práctico 8}
+\end{center}
+\end{table}
+\end{itemize}
+
+El objetivo principal es estudiar la influencia de tres tipos de venenos y 4 tipos de antídotos en el tiempo de supervivencia de unos determinados animales, por lo que se trata de un modelo con dos factores: el veneno (con tres niveles) y el antídoto (con cuatro niveles). La variable que va a medir las diferencias entre los tratamientos es el tiempo que sobreviven los animales. Se combinan todos los niveles de los dos factores por lo que tenemos en total doce tratamientos.
+
+\begin{itemize}
+\item Variable respuesta: Tiempo de supervivencia
+\item Factor: Tipo de veneno que tiene tres niveles. Es un factor de efectos fijos ya que viene decidido qué niveles concretos se van a utilizar.
+\item Factor: Tipo de antídoto que tiene cuatro niveles. Es un factor de efectos fijos ya que viene decidido qué niveles concretos se van a utilizar.
+\item Tamaño del experimento: Número total de observaciones (12).
+\end{itemize}
+
+Para realizar este supuesto en R debemos introducir primero los datos de forma correcta. Podemos introducir los datos directamente en R de forma manual o introducirlos previamente en un archivo de texto o Excel y leerlos en R.\\
+\\
+En este caso lo hacemos en un archivo de texto
+
+<<>>=
+factorial <- read.table("supuesto8.txt", header = TRUE)
+factorial
+@
+
+A continuación debemos transformar todas las columnas que contienen a los factores en un factor para podemos realizar los cálculos posteriores adecuadamente.
+
+<<>>=
+factorial$Antidoto <- factor(factorial$Antidoto)
+factorial$Veneno <- factor(factorial$Veneno)
+@
+
+Para calcular la tabla ANOVA primero hacemos uso de la función “aov” de la siguiente forma
+
+<<>>=
+mod <- aov(Tiempo~ Veneno + Antidoto , data = factorial )
+mod
+@
+
+y posteriormente mostramos un resumen de los resultados con la función “summary” (verdadera tabla ANOVA):
+
+<<>>=
+summary(mod)
+@
+
+Esta Tabla ANOVA recoge la descomposición de la varianza considerando como fuente de variación los doce tratamientos o grupos que se forman al combinar los niveles de los dos factores. Mediante esta tabla se puede estudiar sí varían los tiempos que sobreviven los animales en función de las combinaciones veneno-antídoto. Es decir, se pueden estudiar si existen diferencias significativas entre los tiempos medios de supervivencia con los distintos tipos de venenos y antídotos, pero no se puede estudiar si la efectividad de los antídotos es la misma para todos los venenos. Observando los p-valores, 0.084 y 0.099; mayores respectivamente que el nivel de significación del 5\%, deducimos que ningún efecto es significativo. Por lo tanto, no existen diferencias en los tiempos medios de supervivencia de los animales, en función de la pareja veneno-antídoto que se les suministra.
+
+\subsubsection{El modelo con replicación}
+\subsubsection{Supuesto práctico 9}
+
+Consideremos el supuesto práctico anterior en el que realizamos dos réplicas por cada tratamiento. Los datos que se recogen en la tabla adjunta son los tiempos de supervivencia en horas de unos animales a los que se les suministra al azar tres venenos y cuatro antídotos. El objetivo es estudiar qué antídoto es el adecuado para cada veneno.
+
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{|
+>{\columncolor[HTML]{FFCCC9}}c |cccc|}
+\hline
+         & \multicolumn{4}{c|}{\cellcolor[HTML]{FFCCC9}Antídoto}                                                                                                                                                                                                                                                  \\ \hline
+Veneno   & \multicolumn{1}{c|}{\cellcolor[HTML]{96FFFB}Antídoto 1}                      & \multicolumn{1}{c|}{\cellcolor[HTML]{96FFFB}Antídoto 2}                       & \multicolumn{1}{c|}{\cellcolor[HTML]{96FFFB}Antídoto 3}                      & \cellcolor[HTML]{96FFFB}Antídoto 4                       \\ \hline
+Veneno 1 & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}4.5\\    \\ 4.3\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}11.0\\    \\ 7.2\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}4.5\\    \\ 7.6\end{tabular}} & \begin{tabular}[c]{@{}c@{}}7.1\\    \\ 6.2\end{tabular}  \\ \hline
+Veneno 2 & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}2.9\\    \\ 2.3\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}6.1\\    \\ 12.4\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}3.5\\    \\ 4.0\end{tabular}} & \begin{tabular}[c]{@{}c@{}}10.2\\    \\ 3.8\end{tabular} \\ \hline
+Veneno 3 & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}2.1\\    \\ 2.3\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}3.7\\    \\ 2.9\end{tabular}}  & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}2.5\\    \\ 2.2\end{tabular}} & \begin{tabular}[c]{@{}c@{}}3.6\\    \\ 3.3\end{tabular}  \\ \hline
+\end{tabular}
+\caption{Tabla de datos del Supuesto Práctico 9}
+\end{center}
+\end{table}
+
+\begin{itemize}
+\item Variable respuesta: Tiempo de supervivencia;
+\item Factor: Tipo de veneno (tres niveles).
+\item Factor: Tipo de antídoto (cuatro niveles).
+\item Ambos factores de efectos fijos.
+\item Tamaño del experimento: Número total de observaciones (24).
+\end{itemize}
+
+Para realizar este supuesto en R debemos introducir primero los datos de forma correcta. Podemos introducir los datos directamente en R de forma manual o introducirlos previamente en un archivo de texto o Excel y leerlos en R.\\
+\\
+En este caso lo hacemos en un archivo de texto:
+
+<<>>=
+factorial <- read.table("supuesto9.txt", header = TRUE)
+factorial
+@
+
+A continuación debemos transformar todas las columnas que contienen a los factores en un factor para podemos realizar los cálculos posteriores adecuadamente.
+
+<<>>=
+factorial$Veneno <- factor(factorial$Veneno)
+factorial$Antidoto <- factor(factorial$Antidoto)
+@
+
+Para calcular la tabla ANOVA primero hacemos uso de la función “aov” de la siguiente forma:
+
+<<>>=
+mod <- aov(Tiempo~ Veneno * Antidoto , data = factorial )
+mod
+@
+
+<<>>=
+summary(mod)
+@
+
+La Tabla ANOVA muestra las filas de Tipo\_veneno, Tipo\_antídoto y Tipo\_veneno*Tipo\_antídoto que corresponde a la variabilidad debida a los efectos de cada uno de los factores y de la interacción entre ambos.\\
+
+Las preguntas que nos planteamos son: ¿Los venenos son igual de peligrosos? ¿Y los antídotos son igual de efectivos? La efectividad de los antídotos, ¿es la misma para todos los venenos? Para responder a estas preguntas, comenzamos comprobando si el efecto de los antídotos es el mismo para todos los venenos. Para ello observamos el valor del estadístico (Fexp= 0.761) que contrasta la hipótesis correspondiente a la interacción entre ambos factores. Dicho valor deja a la derecha un Sig. = 0.614, mayor que el nivel de significación 0.05. Por lo tanto la interacción entre ambos factores no es significativa y debemos eliminarla del modelo. Construimos de nuevo la Tabla ANOVA en la que sólo figurarán los efectos principales
+
+<<>>=
+mod <- aov(Tiempo~ Veneno + Antidoto , data = factorial )
+mod
+@
+
+<<>>=
+summary(mod)
+@
+
+Esta tabla muestra dos únicas fuentes de variación, lo efectos principales de los dos factores (Tipo\_veneno y Tipo\_antídoto), y se ha suprimido la interacción entre ambos. Se observa que el valor de la Suma de Cuadrados del error de este modelo (73.873) se ha formado con los valores de las Sumas de cuadrados del error y de la interacción del modelo anterior (20.363 + 53.510 = 73.873). Observando los valores de los p-valores, 0.0046 y 0.0117 asociados a los contrastes principales, se deduce que los dos efectos son significativos a un nivel de significación del 5\%. Deducimos que ni la gravedad de los venenos es la misma, ni la efectividad de los antídotos, pero dicha efectividad no depende del tipo de veneno con el que se administre ya que la interacción no es significativa.
+
+
+\subsection{Diseños factoriales con tres factores}
+
+Supongamos que hay a niveles para el factor A, b niveles del factor B y c niveles para el factor C y que cada réplica del experimento contiene todas las posibles combinaciones de tratamientos, es decir contiene los abc tratamientos posibles.
+
+\subsubsection{El modelo sin replicación}
+
+En este modelo la variabilidad total se descompone en:
+
+\begin{center}
+\textbf{SCT=SCA+SCB+SCC+SC(AB)+SC(AC)+SC(BC)+SC(ABC)+SCR}
+\end{center}
+
+Que representan:
+
+\begin{itemize}
+\item SCT : Suma de Cuadrados Total,
+\item SCA, SCB, SCC: Suma de Cuadrados entre los niveles de A,  de B y de C, respectivamente
+\item SC(AB), SC(AC), SC(BC), SC(ABC), SCR: Suma de Cuadrados de las interacciones A×B, A×C, B×C, A×B×C y del error, respectivamente.
+\end{itemize}
+
+A partir de la ecuación básica del Análisis de la Varianza se pueden construir los cuadrados medios definidos como:
+
+\begin{itemize}
+\item Cuadrado medio total: CMT=(SCT)/(n-1)
+\item Cuadrado medio de A: CMA=(SCA)/(a-1)
+\item Cuadrado medio de B: CMB=(SCB)/(b-1)
+\item Cuadrado medio de C: CMC=(SCC)/(c-1)
+\item Cuadrado medio de las interacciones:
+A×B: CM(AB)=(SC(AB))/((a-1)(b-1));\\ 
+A×C:CM(AC)=(SC(AC))/((a-1)(c-1));\\
+B×C: CM(BC)=(SC(BC))/((b-1)(c-1)); \\                                                 
+A×B×C: CM(ABC)=(SC(ABC))/((a-1)(b-1(c-1))\\
+Cuadrado medio residual: CMR=(SCR)/((a-1)(b-1(c-1))
+\end{itemize}
+
+Al tratarse de un modelo sin replicación, los contrastes sólo se pueden realizar si se supone que la interacción de tercer orden es cero. En esta hipótesis, CM(ABC)=CMR y los contrastes de cada uno de los factores e interacciones comparan su cuadrado medio correspondiente con la varianza residual para construir el estadístico de contraste. El objetivo del análisis es realizar los contrastes sobre los efectos principales y las interacciones de orden dos.
+
+
+\subsubsection{Supuesto práctico 10}
+
+En una fábrica de refrescos está haciendo unos estudios en la planta embotelladora. El objetivo es obtener más uniformidad en el llenado de las botellas. La máquina de llenado teóricamente llena cada botella a la altura correcta, pero en la práctica hay variación, y la embotelladora desea entender mejor las fuentes de esta variabilidad para eventualmente reducirla. En el proceso se pueden controlar tres factores durante el proceso de llenado: El \% de carbonato (factor A), la presión del llenado (factor B) y el número de botellas llenadas por minuto que llamaremos velocidad de la línea (factor C). Se consideran tres niveles para el factor A (10\%, 12\%, 14\%), dos niveles para el factor B (25psi, 30psi) y dos niveles para el factor C (200bpm, 250bpm). Los datos recogidos de la desviación de la altura objetivo se muestran en la tabla adjunta
+
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{|
+>{\columncolor[HTML]{FFCE93}}c |cccc|}
+\hline
+                  & \multicolumn{4}{c|}{\cellcolor[HTML]{FFCE93}Presión (B)}                                                                                                              \\ \hline
+                  & \multicolumn{2}{c|}{\cellcolor[HTML]{CBCEFB}{\color[HTML]{000000} 25 psi}}        & \multicolumn{2}{c|}{\cellcolor[HTML]{CBCEFB}{\color[HTML]{000000} 30 psi}}        \\ \hline
+                  & \multicolumn{2}{c|}{\cellcolor[HTML]{CBCEFB}{\color[HTML]{000000} Velocidad (C)}} & \multicolumn{2}{c|}{\cellcolor[HTML]{CBCEFB}{\color[HTML]{000000} Velocidad (C)}} \\ \hline
+\% de Carbono (A) & \multicolumn{1}{c|}{200}                 & \multicolumn{1}{c|}{250}               & \multicolumn{1}{c|}{200}                           & 250                          \\ \hline
+10                & \multicolumn{1}{c|}{10}                  & \multicolumn{1}{c|}{3}                 & \multicolumn{1}{c|}{5}                             & -1                           \\ \hline
+12                & \multicolumn{1}{c|}{11}                  & \multicolumn{1}{c|}{2}                 & \multicolumn{1}{c|}{5}                             & -3                           \\ \hline
+14                & \multicolumn{1}{c|}{2}                   & \multicolumn{1}{c|}{4}                 & \multicolumn{1}{c|}{-3}                            & 1                            \\ \hline
+\end{tabular}
+\caption{Tabla de datos del Supuesto Práctico 10}
+\end{center}
+\end{table}
+
+La variable respuesta de este experimento es la Desviación que se produce en la altura de llenado en las botellas de refresco, siendo dichas botellas las unidades experimentales. En estas desviaciones de la altura de llenado marcada como objetivo intervienen tres factores: Porcentaje de carbono que presenta tres niveles 10\%, 12\% y 14\%; Presión, con dos niveles 25 psi y 30 psi y Velocidad, con dos niveles 200 y 250. Los niveles de los factores han sido fijados por el experimentador, por lo que todos los factores son de efectos fijos. Se trata de un diseño trifactorial de efectos fijos, donde el número de tratamientos es 3×2×2 = 12.\\
+\\
+Para realizar este supuesto en R debemos introducir primero los datos de forma correcta. Podemos introducir los datos directamente en R de forma manual o introducirlos previamente en un archivo de texto o Excel y leerlos en R.\\
+\\
+En este caso lo hacemos en un archivo de texto:\\
+\\
+Para cargar los datos utilizamos la función read.table indicando el nombre del archivo (que debe de estar en el directorio de trabajo) e indicando además que tiene cabecera.
+
+
+<<>>=
+factorial <- read.table("supuesto10.txt", header = TRUE)
+factorial
+@
+
+A continuación debemos transformar la tres columnas en factores para poder realizar los cálculos posteriores adecuadamente.
+
+<<>>=
+factorial$Carbono <- factor(factorial$Carbono)
+factorial$Velocidad <- factor(factorial$Velocidad)
+factorial$Presion <- factor(factorial$Presion)
+@
+
+Para calcular la tabla ANOVA primero hacemos uso de la función “aov” de la siguiente forma:
+
+<<>>=
+mod <- aov(Altura~ Carbono + Presion + Velocidad + Carbono*Presion + Carbono*Velocidad + 
+             Presion*Velocidad , data = factorial )
+@
+
+donde:
+
+\begin{itemize}
+\item Altura: Nombre de la columna de las observaciones
+\item Carbono: Nombre de la columna en la que está representado el primer factor
+\item Presion: Nombre de la columna en la que está representado el segundo factor
+\item Velocidad: Nombre de la columna en la que está representado el tercer factor
+\item Carbono*Presion, Carbono*Velocidad y Presion*Velocidad hace referencia a las distintas interacciones.
+\item data= data.frame en el que están guardados los datos
+\end{itemize}
+
+
+<<>>=
+mod
+@
+
+<<>>=
+summary(mod)
+@
+
+La Tabla ANOVA muestra las filas de Carbono, Presión, Velocidad, Carbono*Presión, Carbono*Velocidad y Presión*Velocidad que corresponden a la variabilidad debida a los efectos de cada uno de los factores y a las interacciones de orden dos entre ambos. En dicha Tabla se indica que para un nivel de significación del 5\% los efectos que no son significativos del modelo planteado son las interacciones entre los factores Carbono*Presión y Presión*Velocidad ya que los p-valores correspondientes a estos efectos son 0.125 y 0.057 mayores que el nivel de significación.\\
+
+Como consecuencia de este resultado, replanteamos el modelo suprimiendo en primer lugar el efecto Carbono*Presión,para resolverlo suprimimos la interacción Carbono*Presión. La tabla ANOVA que corresponde a este modelo es la siguiente:
+
+<<>>=
+mod <- aov(Altura~ Carbono + Presion + Velocidad + Carbono*Velocidad + Presion*Velocidad , data = factorial )
+summary(mod)
+@
+
+El efecto Presión*Velocidad sigue siendo no significativo por lo que lo suprimimos del modelo, para resolverlo suprimimos la interacción Presión*Velocidad. La tabla ANOVA que corresponde a este modelo es la siguiente:
+
+<<>>=
+mod <- aov(Altura~ Carbono + Presion + Velocidad + Carbono*Velocidad, data = factorial )
+summary(mod)
+@
+
+Todos los efectos de este último modelo planteado son significativos y por lo tanto es en este modelo donde vamos a realizar el estudio. Existen diferencias significativas entre los distintos porcentajes del Carbono, los dos tipos de presión, las dos velocidades de llenado y la interacción entre el porcentaje de Carbono y la Velocidad de llenado.
+
+\subsubsection{Diseño factorial de tres factores con replicación}
+
+\subsubsection{Supuesto práctico 11}
+
+Consideremos el supuesto práctico anterior en el que realizamos dos réplicas por cada tratamiento. En la Tabla adjunta se muestran los datos recogidos de la desviación de la altura objetivo de las botellas de refresco. En el proceso de llenado, la embotelladora puede controlar tres factores durante el proceso: El porcentaje de carbonato (factor A) con tres niveles (10\%, 12\%, 14\%), la presión del llenado (factor B) con dos niveles (25psi, 30psi) y el número de botellas llenadas por minuto que llamaremos velocidad de la línea (factor C) con dos niveles (200bpm, 250bpm).
+
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{|
+>{\columncolor[HTML]{67FD9A}}c |cccc|}
+\hline
+                  & \multicolumn{4}{c|}{\cellcolor[HTML]{67FD9A}Presión (B)}                                                                                                                                                                                                                                   \\ \hline
+                  & \multicolumn{2}{c|}{\cellcolor[HTML]{00D2CB}25 psi}                                                                                                   & \multicolumn{2}{c|}{\cellcolor[HTML]{00D2CB}30 psi}                                                                                \\ \hline
+                  & \multicolumn{2}{c|}{\cellcolor[HTML]{00D2CB}Velocidad (C)}                                                                                            & \multicolumn{2}{c|}{\cellcolor[HTML]{00D2CB}Velocidad (C)}                                                                         \\ \hline
+\% de Carbono (A) & \multicolumn{1}{c|}{200}                                                   & \multicolumn{1}{c|}{250}                                                 & \multicolumn{1}{c|}{200}                                                   & 250                                                   \\ \hline
+10                & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}10\\    \\ 20\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}3\\    \\ 5\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}5\\    \\ 9\end{tabular}}   & \begin{tabular}[c]{@{}c@{}}-1\\    \\ -3\end{tabular} \\ \hline
+12                & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}11\\    \\ 9\end{tabular}}  & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}2\\    \\ 5\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}5\\    \\ 4\end{tabular}}   & \begin{tabular}[c]{@{}c@{}}-3\\    \\ 2\end{tabular}  \\ \hline
+14                & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}2\\    \\ -1\end{tabular}}  & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}4\\    \\ 7\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}-3\\    \\ -2\end{tabular}} & \begin{tabular}[c]{@{}c@{}}1\\    \\ 3\end{tabular}   \\ \hline
+\end{tabular}
+\caption{Tabla de datos del Supuesto Práctico11}
+\end{center}
+\end{table}
+
+La variable respuesta de este experimento es la Desviación que se produce de la altura objetivo en el llenado en las botellas de refresco. Los factores son: Porcentaje de Carbono que presenta tres niveles 10\%, 12\% y 14\%; Presión, con dos niveles 25 psi y 30 psi y Velocidad, con dos niveles 200 y 250. Los niveles de los factores han sido fijados por el experimentador, por lo que todos los factores son de efectos fijos. Se trata de un diseño trifactorial de efectos fijos, donde el número de tratamientos es 3×2×2 = 12 y el número de observaciones 24.\\
+\\
+Para realizar este supuesto en R debemos introducir primero los datos de forma correcta. Podemos introducir los datos directamente en R de forma manual o introducirlos previamente en un archivo de texto o Excel y leerlos en R.\\
+\\
+Para cargar los datos utilizamos la función read.table indicando el nombre del archivo (que debe de estar en el directorio de trabajo) e indicando además que tiene cabecera.
+
+<<>>=
+factorial <- read.table("supuesto11.txt", header = TRUE)
+factorial
+@
+
+A continuación debemos transformar las tres columnas en factores para poder realizar los cálculos posteriores adecuadamente.
+
+<<>>=
+factorial$Carbono <- factor(factorial$Carbono)
+factorial$Velocidad <- factor(factorial$Velocidad)
+factorial$Presion <- factor(factorial$Presion)
+@
+
+Para calcular la tabla ANOVA primero hacemos uso de la función “aov” de la siguiente forma:
+
+<<>>=
+mod <- aov(Altura~ Carbono + Presion + Velocidad + Carbono*Presion + Carbono*Velocidad + Presion*Velocidad + Carbono*Velocidad*Presion, data = factorial )
+@
+
+donde:
+
+\begin{itemize}
+\item Altura: Nombre de la columna de las observaciones
+\item Carbono: Nombre de la columna en la que está representado el primer factor
+\item Presion: Nombre de la columna en la que está representado el segundo factor
+\item Velocidad: Nombre de la columna en la que está representado el tercer factor
+Carbono*Presion, Carbono*Velocidad, Presion*Velocidad y Carbono*Velocidad*Presion hace referencia a las distintas interacciones.
+\item data= data.frame en el que están guardados los datos
+\end{itemize}
+
+y posteriormente mostramos un resumen de los resultados con la función “summary” (verdadera tabla ANOVA):
+
+<<>>=
+summary(mod)
+@
+
+La Tabla ANOVA muestra las filas de Carbono, Presión, Velocidad, Carbono*Presión, Carbono*Velocidad, Presión*Velocidad y Carbono*Presión*Velocidad que corresponden a la variabilidad debida a los efectos de cada uno de los factores, a las interacciones de orden dos y orden tres entre los factores. En dicha Tabla se indica que para un nivel de significación del 5\% los efectos que no son significativos del modelo planteado son las interacciones entre los factores, Carbono*Presión y Presión*Velocidad y Carbono*Presión*Velocidad ya que los p-valores correspondientes a estos efectos son 0.425, 0.668 y 0.894 mayores que el nivel de significación.\\
+\\
+Como consecuencia de este resultado, replanteamos el modelo suprimiendo en primer lugar el efecto Carbono*Presión*Velocidad, cuya significación es mayor
+
+<<>>=
+mod <- aov(Altura~ Carbono + Presion + Velocidad + Carbono*Presion + Carbono*Velocidad + Presion*Velocidad, data = factorial )
+summary(mod)
+@
+
+Los efectos Carbono*Presión y Presión*Velocidad siguen siendo no significativos.\\
+\\
+Suprimimos el efecto Presión*Velocidad que tiene una no significatividad más alta:
+
+<<>>=
+mod <- aov(Altura~ Carbono + Presion + Velocidad + Carbono*Presion + Carbono*Velocidad, data = factorial )
+summary(mod)
+@
+
+El efecto Carbono*Presión sigue siendo no significativo por lo tanto lo suprimimos y replanteamos el siguiente modelo matemático
+
+<<>>=
+mod <- aov(Altura~ Carbono + Presion + Velocidad +  Carbono*Velocidad, data = factorial )
+summary(mod)
+@
+
+Todos los efectos de este último modelo planteado son significativos y por lo tanto es en este modelo donde vamos a realizar el estudio. Existen diferencias significativas entre los distintos porcentajes del Carbono, los dos tipos de presión, las dos velocidades de llenado y la interacción entre el porcentaje de Carbono y la Velocidad de llenado.
 
 
 

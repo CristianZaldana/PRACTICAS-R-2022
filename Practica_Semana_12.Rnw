@@ -1,0 +1,210 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage {ragged2e}
+\usepackage{enumerate}
+\usepackage{booktabs}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage[normalem]{ulem}
+\usepackage{array}
+\usepackage{amssymb, amsmath}
+
+\usepackage[Lenny]{fncychap}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage[labelfont=bf]{caption}
+\usepackage{longtable}
+\usepackage{float}
+\usepackage{fancyhdr}
+\usepackage{geometry}
+\geometry{left=2.5cm,right=2.5cm,bottom=3.5cm,top=2cm}
+\spanishdecimal{.}
+
+
+\pagestyle{fancy}
+\rhead{\includegraphics[width=2cm, height=2cm]{logo1}}
+\lhead{}
+\chead{\textbf{UNIVERSIDAD DE EL SALVADOR \\ FACULTAD MULTIDISCIPLINARIA DE OCCIDENTE \\ DEPARTAMENTO DE MATEMÁTICA}}
+\lfoot{\textit{CICLO II 2022}}
+\rfoot{\textbf{PRÁCTICA SEMANA 12 (R)}}
+\setlength{\headheight}{60.50525pt}
+\renewcommand{\headrulewidth}{1pt}
+\renewcommand{\footrulewidth}{0.5pt}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+\thispagestyle{empty}
+\centering{\textbf{UNIVERSIDAD DE EL SALVADOR}}\\
+\vspace{1cm}
+\centering{\textbf{FACULTAD MULTIDISCIPLINARIA DE OCCIDENTE}}\\
+\vspace{1cm}
+\centering{\textbf{DEPARTAMENTO DE MATEMÁTICAS}}\\
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=6cm, height=6cm]{logo1.jpg}
+\end{center}
+\end{figure}
+\begin{center}
+\textbf{PRACTICA SEMANA 12 DE R}\\
+\vspace{1cm}
+\textbf{CARRERA:}\\
+\vspace{1cm}
+\textbf{LICENCIATURA EN ESTADÍSTICA}\\
+\vspace{1cm}
+\textbf{DOCENTE:}\\
+\vspace{1cm}
+\textbf{LIC. JAIME ISAAC PEÑA}\\
+\vspace{1cm}
+\textbf{PRESENTADO POR:}\\
+\vspace{1cm}
+\textbf{CRISTIAN ALBERTO ZALDAÑA ALVARADO}
+\end{center}
+\newpage
+\tableofcontents
+\newpage
+\listoftables
+\newpage
+\listoffigures
+\newpage
+
+
+\justify
+
+\section{REGRESIÓN LINEAL SIMPLE}
+
+Los modelos de regresión lineal son modelos probabilísticos basados en una función lineal,
+expresamos el valor de nuestra variable de estudio (interés), a la que también llamamos variable
+dependiente, en función de una o más variables a quienes llamamos variables independientes o
+explicativas, y las cuales suponemos tienen un efecto sobre nuestra variable de estudio. Los pasos
+básicos a seguir en el estudio de un modelo lineal son:
+
+\begin{itemize}
+\item Escribir el modelo matemático con todas sus hipótesis.
+\item Estimación de los parámetros del modelo.
+\item Inferencias sobre los parámetros.
+\item Diagnóstico del modelo.
+\end{itemize}
+
+
+\subsection{EJEMPLO 1}
+
+En el archivo “costes.dat” se encuentra la información correspondiente a 34 fábricas de producción en
+el montaje de placas para ordenador, el archivo contiene la información sobre el costo total (primera
+columna) y el número de unidades fabricadas (segunda columna). Suponga que deseamos ajustar un
+modelo de regresión simple a los datos para estimar el costo total en función del número de unidades
+fabricadas.\\
+\\
+Ejecutamos lo siguiente.
+<<>>=
+Datos=read.table("costes.txt")
+@
+Renombrando a las variables
+<<>>=
+names(Datos)=c("Costos","Unidades")
+@
+Realizando el diagrama de dispersion entre las dos variables
+<<>>=
+plot(Datos$Unidades,Datos$Costos)
+@
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics{dispersion2}
+\caption{Gráfico de Dispersion}
+\end{center}
+\end{figure}
+
+se aprecia una relación entre las variables por lo que se procede a ajustar el modelo de regresión
+
+<<>>=
+regresion<-lm(Datos$Costos~Datos$Unidades)
+summary(regresion)
+@
+
+Ejecutar lo siguiente:
+
+<<>>=
+regresion2<-lm(Datos$Costos~Datos$Unidades-1)
+summary(regresion2)
+@
+
+En este caso el modelo resultante sería: costos = 0.1335(unidades); el cual es un mejor modelo en
+términos de variabilidad explicada.\\
+
+Una vez estimados los parámetros del modelo, el siguiente paso es validarlo, es decir verificar si se cumplen las cuatro hipótesis básicas del modelo (nulidad, normalidad, independencia y homocesdasticidad de los residuos). Para verificar esto, podríamos realizar los siguientes pasos:\\
+\\
+Efectua un analisis grafico de bondad de ajuste del modelo
+<<>>=
+par(mfrow = c(2, 2))
+plot(regresion2)
+par(oma=c(1,1,1,1), new=T, font=2, cex=0.5)
+mtext(outer=T, "Gráficos para validación del modelo: Costos en función de las unidades",
+side=3)
+@
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics{validacion}
+\caption{Gráficos para validación del modelo}
+\end{center}
+\end{figure}
+
+En los gráficos que se muestra en la parte superior se contrasta los cuatro supuestos. En el de la
+izquierda se verifican: nulidad, independencia y homocedasticidad; a partir del gráfico
+mostrado parece existir indicios de falta de homocedasticidad, por su parte los residuos pueden
+considerarse constante pues no muestran ningún patrón; sin embargo, la media de los residuos
+no parece ser nula, lo cual indica falta de linealidad en el modelo (es decir, es necesario
+incorporar más variables o tal vez términos cuadráticos). En la figura de la derecha se contrasta
+la normalidad, y puede apreciarse que los residuos parecen seguir una distribución normal.\\
+
+Por su parte, también es de mencionar que en el gráfico se muestran puntos que posiblemente
+sean observaciones atípicas, por lo que habría que estudiarlas.\\
+\\
+Información sobre el modelo ajustado que proporciona la función lm()
+
+<<>>=
+formula(regresion2) # Extrae la fórmula del modelo.
+coef(regresion2) # Extrae el vector de coeficientes de regresión.
+residuals(regresion2) # Extrae el vector de residuos.
+regresion2$fitted.values # Extrae un vector con los valores estimados.
+vcov(regresion2) # Extrae la matriz de covarianzas de los parámetros.
+ls.diag(regresion2) # Calcula los residuales, errores estándar de los parámetros, distancias Cook.
+step(regresion2) # Permite obtener el mejor conjunto de regresión y proporciona la
+#estimación de los coeficientes (válido únicamente en modelos de regresión múltiple).
+@
+
+De todos los resultados anteriores nos concentraremos en la instrucción: ls.diag(regresion2). Con
+esta instrucción obtenemos para cada observación en el conjunto de datos, medidas que nos
+ayudarán a identificar observación atípicas (tienen un impacto únicamente en las medidas resumen
+del modelo) y observaciones influyentes (tienen un efecto marcado en la estimación de los
+parámetros). Al digitar la instrucción anterior en R se mostrará los siguientes resultados (cada uno
+de ellos en un vector).
+
+\section{REGRESIÓN LINEAL MÚLTIPLE}
+
+\subsection{EJEMPLO 2}
+
+En el archivo “preciocasas.dat” tienen la información sobre 100 datos de precios de viviendas y sus
+características, el archivo se encuentra estructurado de la siguiente forma:
+
+\begin{itemize}
+\item Primera columna: precios de viviendas en euros.
+\item Segunda columna: superficie en metros cuadrados.
+\item Tercera: numero de cuartos de baño.
+\item Cuarta: número de dormitorios.
+\item Quinta: número de plazas de garaje.
+\item Sexta: edad de la vivienda .
+\item Séptima: 1 =buenas vistas y 0 =vistas corrientes
+\end{itemize}
+
+Suponga que deseamos estimar un modelo de regresión en el cual relacionemos el precio de una
+vivienda en función de sus características.\\
+\\
+Ejecutar lo siguiente:
+<<>>=
+datos<-read.table(file="preciocasas.txt")
+head(datos)
+@
+
+
+
+\end{document}
